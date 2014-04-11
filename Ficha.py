@@ -5,8 +5,12 @@
 	#Inicializar cada objeto
 	def __init__(self, color, posicion, tipo):
 
+		#Las fichas negras = 0 y las blancas = 1
 		self.color = color
+
 		self.posicion = posicion
+		
+		#Las fichas = 0 y las damas = 1
 		self.tipo = tipo
 
 
