@@ -19,7 +19,7 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0
 
 			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
 
-			
+
 
 #Indica si el juego debe continuar o no
 seguir = True
@@ -173,9 +173,8 @@ def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 
 					comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4)
 
-		except AttributeError:
-			print "Casilla vacia."
-
+		except IndexError:
+			print "El movimiento no está permitido"
 
 #Devuleve la dirección del movimiento
 def direcMovimiento(caracter1, caracter2, caracter3, caracter4):
