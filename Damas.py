@@ -3,7 +3,7 @@
 #Variables:
 
 #Tablero predeterminado para la partida.			 
-tablero =  [[0, Ficha(0, "A2", 0), 2, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
+tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
 
 			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, Ficha(0, "B5", 0), 0, Ficha(0, "B7", 0), 0],
 
@@ -18,6 +18,8 @@ tablero =  [[0, Ficha(0, "A2", 0), 2, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
 			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
+
+			
 
 #Indica si el juego debe continuar o no
 seguir = True
@@ -80,10 +82,10 @@ def entradaPermitida(movimiento):
 	#Caracter1
 
 	#Convierte el carácter a un número
-	caracter1 = ord(movimiento[0]) - 64
+	caracter1 = ord(movimiento[0]) - 65
 
 	#Comprueba si es una letra mayuscula entre A y H
-	if (caracter1 > 8 or caracter1 < 1):
+	if (caracter1 > 7 or caracter1 < 0):
 		print "Fallo primer caracter: " + movimiento[0] + " El caracter debe estar entre A y H."
 		return False
 
@@ -92,13 +94,13 @@ def entradaPermitida(movimiento):
 
 	#Devuelve Falso en caso de que el caracter no sea un entero.
 	try:
-		caracter2 = int(movimiento[1])
+		caracter2 = int(movimiento[1])-1
 	except ValueError:
 		print "Fallo segundo caracter: " + movimiento[1] + " El numero debe estar estar entre 1 y 8."
 		return False
 
 	#Comprueba si es un número entre 1 y 8
-	if caracter2 > 8 or caracter2 < 1:
+	if caracter2 > 7 or caracter2 < 0:
 		print "Fallo segundo caracter: " + movimiento[1] + " El numero debe estar estar entre 1 y 8."
 		return False
 
@@ -106,10 +108,10 @@ def entradaPermitida(movimiento):
 	#Caracter3
 
 	#Convierte el caracter a un numero
-	caracter3 = ord(movimiento[2]) - 64
+	caracter3 = ord(movimiento[2]) - 65
 
 	#Comprueba si es una letra mayuscula entre A y H
-	if (caracter3 > 8 or caracter3 < 1):
+	if (caracter3 > 7 or caracter3 < 0):
 		print "Fallo tercer caracter: " + movimiento[2] + " El caracter debe estar entre A y H."
 		return False
 
@@ -118,44 +120,112 @@ def entradaPermitida(movimiento):
 
 	#Devuelve Falso en caso de que el caracter no sea un entero.
 	try:
-		caracter4 = int(movimiento[3])
+		caracter4 = int(movimiento[3])-1
 	except ValueError:
 		print "Fallo cuarto caracter: " + movimiento[3] + " El numero debe estar estar entre 1 y 8."
 		return False
 
 	#Comprueba si es un número entre 1 y 8
-	if caracter4 > 8 or caracter4 < 1:
+	if caracter4 > 7 or caracter4 < 0:
 		print "Fallo cuarto caracter: " + movimiento[3] + " El numero debe estar estar entre 1 y 8."
 		return False
 
 	#Buscamos que el movimiento sea solo en las casillas blancas
-	if (abs(caracter3-1) - caracter4) % 2 != 0:
+	if (abs(caracter3) - caracter4+1) % 2 != 0:
 		
-		print "Solo se puede mover en diagonal"	
-		return False	
+		print "Solo se puede mover en las casillas blancas"	
+		return False
+
+	if abs(caracter1 - caracter3) != abs(caracter2 - caracter4):
+
+		print "Solo se puede mover en diagonal"
+		return False
+
+	if (tablero[caracter1][caracter2].tipo == 0) and calcularDistancia(caracter1, caracter3) != 1:
+
+		print "Los peones solo se pueden mover con distancia 1"
+		return False
+
+	if ((tablero [caracter1][caracter2].color == 0) and (turno == "Blancas")) or ((tablero [caracter1][caracter2].color == 1) and (turno == "Negras")): 
+
+		print "No puede mover las fichas del jugador contrario. Tramposo!!"
+		return False
 
 	return True
 
-
-def calcularDistancia(movimiento):
-	caracter1 = ord(movimiento[0]) - 64
-	caracter2 = int(movimiento[1])
-	caracter3 = ord(movimiento[2]) - 64
-	caracter4 = int(movimiento[3])
+#Devuelve la distancia del movimiento realizado
+def calcularDistancia(caracter1, caracter3):
+	return abs(caracter1 - caracter3)
 
 
+def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
+	if tablero[caracter3][caracter4] == 0:
+		mover(movimiento, caracter1, caracter2, caracter3, caracter4)
+
+	else:
+		try:
+			if (tablero[caracter3][caracter4].color != tablero[caracter1][caracter2].color):
+				
+				x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+				
+				if (tablero[caracter3+y][caracter4+x] == 0):
+					#comerFicha(caracter1, caracter2, caracter3, caracter4)
+
+					comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4)
+
+		except AttributeError:
+			print "Casilla vacia."
 
 
-#def puedeMover():
+#Devuleve la dirección del movimiento
+def direcMovimiento(caracter1, caracter2, caracter3, caracter4):
+	x = (caracter4 - caracter2)/calcularDistancia(caracter1, caracter3)
+	y = (caracter3 - caracter1)/calcularDistancia(caracter1, caracter3)
+	return x,y
 
-#def mover():
+
+def mover(movimiento, caracter1, caracter2, caracter3, caracter4):
+
+	posiNueva = "" + movimiento[2] + movimiento[3]
+
+	#Pasamos la antigua ficha a la nueva posicion
+	tablero[caracter3][caracter4] = tablero[caracter1][caracter2]
+	#Damos al atributo posicion de la ficha la nueva posicion
+	tablero[caracter3][caracter4].posicion = posiNueva
+	#Borramos la ficha de la antigua posicion
+	tablero[caracter1][caracter2] = 0
+
+	promociona(caracter3, caracter4)
 
 
-#def comerFicha():
+def comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4):
+	
+	x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+	
 
+	#posiNueva = "" + movimiento[2] + movimiento[3]
+
+
+	#Pasamos la antigua ficha a la nueva posicion
+	tablero[caracter3+y][caracter4+x] = tablero[caracter1][caracter2]
+
+	#Borramos la posicion antigua y la de la ficha que se ha comido
+	tablero[caracter3][caracter4] = 0
+	tablero[caracter1][caracter2] = 0
+
+	promociona(caracter3+y, caracter4+x)
+
+	#Damos al atributo posicion de la ficha la nueva posicion
+	#tablero[caracter3+y][caracter4+x].posicion = posiNueva
+	
+	
 
 #def comerEnCadena():
 
+
+def promociona(caracter3, caracter4):
+	if ((tablero[caracter3][caracter4].color == 0) and caracter3 ==7) or ((tablero[caracter3][caracter4].color == 1) and caracter3 ==0):
+		tablero[caracter3][caracter4].tipo = 1
 
 
 #Programa
@@ -180,12 +250,16 @@ while seguir == True:
 	#Si el movimiento que se pretende realizar no es válido se salta el resto del flujo del programa y se termina.
 	if entradaPermitida(movimiento) == True:
 
-		caracter1 = ord(movimiento[0]) - 64
-		caracter2 = int(movimiento[1])
-		caracter3 = ord(movimiento[2]) - 64
-		caracter4 = int(movimiento[3])
+		caracter1 = ord(movimiento[0]) - 65
+		caracter2 = int(movimiento[1]) - 1
+		caracter3 = ord(movimiento[2]) - 65
+		caracter4 = int(movimiento[3]) - 1
 
-		print "su puta madre!!!"
+		puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4)
+
+		
+
+
 	else:
 		seguir = False
 
