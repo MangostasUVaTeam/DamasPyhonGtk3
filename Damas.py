@@ -130,26 +130,68 @@ def entradaPermitida(movimiento):
 		print "Fallo cuarto caracter: " + movimiento[3] + " El numero debe estar estar entre 1 y 8."
 		return False
 
+
+
+
+
 	#Buscamos que el movimiento sea solo en las casillas blancas
 	if (abs(caracter3) - caracter4+1) % 2 != 0:
 		
 		print "Solo se puede mover en las casillas blancas"	
 		return False
 
+
+	#Comprobamos si el movimiento es solo en diagonal
 	if abs(caracter1 - caracter3) != abs(caracter2 - caracter4):
 
 		print "Solo se puede mover en diagonal"
 		return False
 
+	#Comprueba que el movimiento de los peones solo es de una unidad
 	if (tablero[caracter1][caracter2].tipo == 0) and calcularDistancia(caracter1, caracter3) != 1:
 
 		print "Los peones solo se pueden mover con distancia 1"
 		return False
 
+	#Comprueba que no se haya movido la ficha del jugador rival
 	if ((tablero [caracter1][caracter2].color == 0) and (turno == "Blancas")) or ((tablero [caracter1][caracter2].color == 1) and (turno == "Negras")): 
 
 		print "No puede mover las fichas del jugador contrario. Tramposo!!"
 		return False
+
+	#Comprueba que la ficha que se quiere comer no sea del mismo color que la que come.
+	if (tablero[caracter3][caracter4] != 0) and (tablero[caracter1][caracter2].color == tablero[caracter3][caracter4].color):
+		print "No se pueden comer fichas propias"
+		return False
+
+	#Comprueba que las reinas no salten ningún peón
+	if (tablero[caracter1][caracter2].tipo == 1) and calcularDistancia(caracter1, caracter3) != 1:
+
+		distancia = calcularDistancia(caracter1, caracter3)
+		i = 1
+		while (i != distancia):
+
+			x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+			arriba = i*y
+			lado = i*x
+			i = i+1
+			
+			if tablero[caracter1+arriba][caracter2+lado] != 0:
+				print "Las reinas no pueden saltar peones."
+				return False
+
+
+	#Comprueba que la ficha se pueda colocar en una posición correcta después de comer a una del rival.
+	x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+	try:			
+		if (tablero[caracter3+y][caracter4+x] != 0):
+			print "Movimiento no válido. Casilla ocupada"
+			return False
+
+	except IndexError:
+			print "Movimiento no válido. Ficha fuera de tablero"
+			return False
+	
 
 	return True
 
@@ -163,19 +205,17 @@ def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 		mover(movimiento, caracter1, caracter2, caracter3, caracter4)
 
 	else:
-		try:
-			if (tablero[caracter3][caracter4].color != tablero[caracter1][caracter2].color):
+
+		if (tablero[caracter3][caracter4].color != tablero[caracter1][caracter2].color):
+			
+			x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+			
+			if (tablero[caracter3+y][caracter4+x] == 0):
 				
-				x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
-				
-				if (tablero[caracter3+y][caracter4+x] == 0):
-					#comerFicha(caracter1, caracter2, caracter3, caracter4)
+				#comerFicha(caracter1, caracter2, caracter3, caracter4)
+				comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4)
 
-					comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4)
-
-		except IndexError:
-			print "El movimiento no está permitido"
-
+		
 #Devuleve la dirección del movimiento
 def direcMovimiento(caracter1, caracter2, caracter3, caracter4):
 	x = (caracter4 - caracter2)/calcularDistancia(caracter1, caracter3)
@@ -256,8 +296,7 @@ while seguir == True:
 
 		puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4)
 
-		
-
+	
 
 	else:
 		seguir = False
