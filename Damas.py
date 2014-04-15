@@ -2,7 +2,8 @@
 
 #Variables:
 
-#Tablero predeterminado para la partida.			 
+#Tablero predeterminado para la partida.		
+
 tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
 
 			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, Ficha(0, "B5", 0), 0, Ficha(0, "B7", 0), 0],
@@ -20,7 +21,6 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0
 			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
 
 
-
 #Indica si el juego debe continuar o no
 seguir = True
 
@@ -35,7 +35,7 @@ def verTablero():
 	for y in range(-7, 1):
 		linea = ""
 		
-		#
+		#Valor absoluto para hacer una cuenta atras desde 7 a 0
 		y = abs(y)
 
 		#Genera la letra de cada fila
@@ -163,36 +163,25 @@ def entradaPermitida(movimiento):
 	if (tablero[caracter3][caracter4] != 0) and (tablero[caracter1][caracter2].color == tablero[caracter3][caracter4].color):
 		print "No se pueden comer fichas propias"
 		return False
+	
+	#Calculamos la distancia y la direccion de las coordenadas (x, y)
+	distancia = calcularDistancia(caracter1, caracter3)
+	x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
 
 	#Comprueba que las reinas no salten ningún peón
-	if (tablero[caracter1][caracter2].tipo == 1) and calcularDistancia(caracter1, caracter3) != 1:
+	if (tablero[caracter1][caracter2].tipo == 1) and (distancia != 1):
 
-		distancia = calcularDistancia(caracter1, caracter3)
 		i = 1
 		while (i != distancia):
-
-			x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
-			arriba = i*y
-			lado = i*x
-			i = i+1
+		
+			lado = i * x
+			arriba = i * y			
+			i += 1
 			
-			if tablero[caracter1+arriba][caracter2+lado] != 0:
+			if tablero[caracter1 + lado][caracter2 + arriba] != 0:
 				print "Las reinas no pueden saltar peones."
 				return False
-
-
-	#Comprueba que la ficha se pueda colocar en una posición correcta después de comer a una del rival.
-	x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
-	try:			
-		if (tablero[caracter3+y][caracter4+x] != 0):
-			print "Movimiento no válido. Casilla ocupada"
-			return False
-
-	except IndexError:
-			print "Movimiento no válido. Ficha fuera de tablero"
-			return False
 	
-
 	return True
 
 #Devuelve la distancia del movimiento realizado
@@ -201,6 +190,9 @@ def calcularDistancia(caracter1, caracter3):
 
 
 def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
+
+	global seguir
+	
 	if tablero[caracter3][caracter4] == 0:
 		mover(movimiento, caracter1, caracter2, caracter3, caracter4)
 
@@ -210,16 +202,20 @@ def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 			
 			x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
 			
-			if (tablero[caracter3+y][caracter4+x] == 0):
+			if (tablero[caracter3 + x][caracter4 + y] == 0):
 				
-				#comerFicha(caracter1, caracter2, caracter3, caracter4)
 				comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4)
+			
+			else:
+				print "Movimiento no valido. Ficha fuera de tablero"
+				seguir = False
 
 		
 #Devuleve la dirección del movimiento
 def direcMovimiento(caracter1, caracter2, caracter3, caracter4):
-	x = (caracter4 - caracter2)/calcularDistancia(caracter1, caracter3)
-	y = (caracter3 - caracter1)/calcularDistancia(caracter1, caracter3)
+
+	x = (caracter3 - caracter1)/calcularDistancia(caracter1, caracter3)
+	y = (caracter4 - caracter2)/calcularDistancia(caracter1, caracter3)
 	return x,y
 
 
@@ -246,13 +242,13 @@ def comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4):
 
 
 	#Pasamos la antigua ficha a la nueva posicion
-	tablero[caracter3+y][caracter4+x] = tablero[caracter1][caracter2]
+	tablero[caracter3 + x][caracter4 + y] = tablero[caracter1][caracter2]
 
 	#Borramos la posicion antigua y la de la ficha que se ha comido
 	tablero[caracter3][caracter4] = 0
 	tablero[caracter1][caracter2] = 0
 
-	promociona(caracter3+y, caracter4+x)
+	promociona(caracter3 + x, caracter4 + y)
 
 	#Damos al atributo posicion de la ficha la nueva posicion
 	#tablero[caracter3+y][caracter4+x].posicion = posiNueva
@@ -295,8 +291,6 @@ while seguir == True:
 		caracter4 = int(movimiento[3]) - 1
 
 		puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4)
-
-	
 
 	else:
 		seguir = False
