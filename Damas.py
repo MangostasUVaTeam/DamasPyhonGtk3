@@ -202,14 +202,17 @@ def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 			
 			x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
 			
-			if (tablero[caracter3 + x][caracter4 + y] == 0):
+			try:
+				if (tablero[caracter3 + x][caracter4 + y] == 0):
 				
-				comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4)
+					comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4)
 			
-			else:
-				print "Movimiento no valido. Ficha fuera de tablero"
-				seguir = False
-
+				else:
+					print "Movimiento no valido. Ficha fuera de tablero o casilla ocupada"
+					seguir = False
+			except IndexError:
+					print "Movimiento no valido. Ficha fuera de tablero"
+					seguir = False
 		
 #Devuleve la dirección del movimiento
 def direcMovimiento(caracter1, caracter2, caracter3, caracter4):
