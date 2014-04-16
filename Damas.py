@@ -217,8 +217,9 @@ def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 #Devuleve la dirección del movimiento
 def direcMovimiento(caracter1, caracter2, caracter3, caracter4):
 
-	x = (caracter3 - caracter1)/calcularDistancia(caracter1, caracter3)
-	y = (caracter4 - caracter2)/calcularDistancia(caracter1, caracter3)
+	x = (caracter4 - caracter2)/calcularDistancia(caracter1, caracter3)
+	y = (caracter3 - caracter1)/calcularDistancia(caracter1, caracter3)
+	#print "X: ", x, "Y: ", y
 	return x,y
 
 
