@@ -1,4 +1,5 @@
 ﻿from Ficha import Ficha
+import os
 
 #Variables:
 
@@ -19,6 +20,8 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
 			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
+
+
 
 
 #Indica si el juego debe continuar o no
@@ -147,63 +150,73 @@ def entradaPermitida(movimiento):
 		print "Solo se puede mover en diagonal"
 		return False
 
-	#Comprueba que el movimiento de los peones solo es de una unidad
-	if (tablero[caracter1][caracter2].tipo == 0) and calcularDistancia(caracter1, caracter3) != 1:
+	#Try-except que captura el caso de que la casilla no tenga ficha
+	try:
+		#Comprueba que el movimiento de los peones solo es de una unidad
+		if (tablero[caracter1][caracter2].tipo == 0) and calcularDistancia(caracter1, caracter3) != 1:
 
-		print "Los peones solo se pueden mover con distancia 1"
-		return False
+			print "Los peones solo se pueden mover con distancia 1"
+			return False
 
-	#Comprueba que no se haya movido la ficha del jugador rival
-	if ((tablero [caracter1][caracter2].color == 0) and (turno == "Blancas")) or ((tablero [caracter1][caracter2].color == 1) and (turno == "Negras")): 
+		#Comprueba que no se haya movido la ficha del jugador rival
+		if ((tablero [caracter1][caracter2].color == 0) and (turno == "Blancas")) or ((tablero [caracter1][caracter2].color == 1) and (turno == "Negras")): 
 
-		print "No puede mover las fichas del jugador contrario. Tramposo!!"
-		return False
+			print "No puede mover las fichas del jugador contrario. Tramposo!!"
+			return False
 
-	#Comprueba que la ficha que se quiere comer no sea del mismo color que la que come.
-	if (tablero[caracter3][caracter4] != 0) and (tablero[caracter1][caracter2].color == tablero[caracter3][caracter4].color):
-		print "No se pueden comer fichas propias"
-		return False
-	
-	#Calculamos la distancia y la direccion de las coordenadas (x, y)
-	distancia = calcularDistancia(caracter1, caracter3)
-	x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
-
-	#Comprueba que las reinas no salten ningún peón
-	if (tablero[caracter1][caracter2].tipo == 1) and (distancia != 1):
-
-		i = 1
-		while (i != distancia):
+		#Comprueba que la ficha que se quiere comer no sea del mismo color que la que come.
+		if (tablero[caracter3][caracter4] != 0) and (tablero[caracter1][caracter2].color == tablero[caracter3][caracter4].color):
+			print "No se pueden comer fichas propias"
+			return False
 		
-			lado = i * x
-			arriba = i * y			
-			i += 1
+		#Calculamos la distancia y la direccion de las coordenadas (x, y)
+		distancia = calcularDistancia(caracter1, caracter3)
+		x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+
+		#Comprueba que las reinas no salten ningún peón
+		if (tablero[caracter1][caracter2].tipo == 1) and (distancia != 1):
+
+			i = 1
+			while (i != distancia):
 			
-			if tablero[caracter1 + lado][caracter2 + arriba] != 0:
-				print "Las reinas no pueden saltar peones."
-				return False
-	
+				lado = i * x
+				arriba = i * y			
+				i += 1
+				
+				if tablero[caracter1 + lado][caracter2 + arriba] != 0:
+					print "Las reinas no pueden saltar peones."
+					return False
+	except AttributeError:
+		print "La casilla está vacía"
+		return False
+
+	#En caso de que no se cumpla ningun caso anterior, quiere decir que la entrada del usuario ha sido correcta, por lo que devuelve verdadero
 	return True
 
 #Devuelve la distancia del movimiento realizado
 def calcularDistancia(caracter1, caracter3):
 	return abs(caracter1 - caracter3)
 
-
+#Función que indica si el movimiento es comiendo o sin comer una ficha
 def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 
 	global seguir
 	
+	#si la posición a la que se mueve está vacia llama a mover, sino llama a comerficha
 	if tablero[caracter3][caracter4] == 0:
 		mover(movimiento, caracter1, caracter2, caracter3, caracter4)
 
 	else:
 
+		#comprueba que las fichas son de distinto color
 		if (tablero[caracter3][caracter4].color != tablero[caracter1][caracter2].color):
 			
 			x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
 			
+			#llama a comerficha si la posicion siguiente esta vacia si salta un error es porque la ficha se colocaría fuera del tablero, en cuyo caso se captura
+
 			try:
-				if (tablero[caracter3 + x][caracter4 + y] == 0):
+				if (caracter4 != 0) and (tablero[caracter3 + x][caracter4 + y] == 0):
 				
 					comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4)
 			
@@ -214,15 +227,15 @@ def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 					print "Movimiento no valido. Ficha fuera de tablero"
 					seguir = False
 		
-#Devuleve la dirección del movimiento
+#Devuleve la dirección del movimiento en dos variables
 def direcMovimiento(caracter1, caracter2, caracter3, caracter4):
 
-	x = (caracter4 - caracter2)/calcularDistancia(caracter1, caracter3)
-	y = (caracter3 - caracter1)/calcularDistancia(caracter1, caracter3)
-	#print "X: ", x, "Y: ", y
+	x = (caracter3 - caracter1)/calcularDistancia(caracter1, caracter3)
+	y = (caracter4 - caracter2)/calcularDistancia(caracter1, caracter3)
+
 	return x,y
 
-
+#función que mueve la ficha
 def mover(movimiento, caracter1, caracter2, caracter3, caracter4):
 
 	posiNueva = "" + movimiento[2] + movimiento[3]
@@ -236,7 +249,7 @@ def mover(movimiento, caracter1, caracter2, caracter3, caracter4):
 
 	promociona(caracter3, caracter4)
 
-
+#función que mueve la ficha a la posición siguiente de la indicada y elimina la ficha de la posición marcada, es decir, la come-
 def comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4):
 	
 	x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
@@ -261,7 +274,7 @@ def comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4):
 
 #def comerEnCadena():
 
-
+#Función que convierte en reina a una ficha cuando llega a la primera linea del color contrario.
 def promociona(caracter3, caracter4):
 	if ((tablero[caracter3][caracter4].color == 0) and caracter3 ==7) or ((tablero[caracter3][caracter4].color == 1) and caracter3 ==0):
 		tablero[caracter3][caracter4].tipo = 1
@@ -271,6 +284,10 @@ def promociona(caracter3, caracter4):
 
 #Controla la continuidad de la aplicacion.
 while seguir == True:
+	if (os.name == "nt"):
+		os.system("cls")
+	else:
+		os.system("clear")
 
 	verTablero()
 
