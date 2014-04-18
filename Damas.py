@@ -5,7 +5,7 @@ import os
 
 #Tablero predeterminado para la partida.		
 
-tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
+"""tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
 
 			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, Ficha(0, "B5", 0), 0, Ficha(0, "B7", 0), 0],
 
@@ -19,9 +19,23 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0
 
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
+			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]"""
+
+tablero =  [[0, Ficha(0, "A2", 0), 0, 			0, 0, Ficha(0, "A6", 0), 0, 					0],
+
+			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, 		0, 0, Ficha(0, "B7", 0), 0],
+
+			[0, 0, 0, Ficha(0, "C4", 0), 0, 0, 0, Ficha(0, "C8", 0)],
+
+			[0,          0,         Ficha(0, "B5", 0),0,Ficha(0, "B5", 0),0,  Ficha(0, "B5", 0),  0],
+
+			[0,          0,          0,          0,          0,          0,          0,          0],
+
+			[Ficha(1, "F1", 0), 0, Ficha(1, "F3", 0), 0, Ficha(0, "F5", 0), 0, Ficha(0, "F7", 0), 0],
+
+			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
+
 			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
-
-
 
 
 #Indica si el juego debe continuar o no
@@ -218,7 +232,7 @@ def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 			try:
 				if (caracter4 != 0) and (tablero[caracter3 + x][caracter4 + y] == 0):
 				
-					comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4)
+					comerFicha( caracter1, caracter2, caracter3, caracter4)
 			
 				else:
 					print "Movimiento no valido. Ficha fuera de tablero o casilla ocupada"
@@ -250,7 +264,7 @@ def mover(movimiento, caracter1, caracter2, caracter3, caracter4):
 	promociona(caracter3, caracter4)
 
 #función que mueve la ficha a la posición siguiente de la indicada y elimina la ficha de la posición marcada, es decir, la come-
-def comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4):
+def comerFicha( caracter1, caracter2, caracter3, caracter4):
 	
 	x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
 	
@@ -272,7 +286,37 @@ def comerFicha(movimiento, caracter1, caracter2, caracter3, caracter4):
 	
 	
 
-#def comerEnCadena():
+def comerEnCadena():
+	posibles =[]
+
+	posibles.append(["47","36","16"])
+	posibles.append(["47","36","34","32","12"])
+
+
+
+
+	a = len(posibles[0])
+	movimientos = posibles[0]
+	for i in posibles:
+		b = len(i)
+		if (a<b):
+			movimientos = i
+
+
+	distancia = len(movimientos)-1
+	caracter1=int(movimientos[0][0])
+	caracter2=int(movimientos[0][1])
+
+	for recorrido in range(distancia):	
+	
+		caracter3=int(movimientos[recorrido+1][0])
+		caracter4=int(movimientos[recorrido+1][1])
+		comerFicha(caracter1,caracter2,caracter3,caracter4)
+
+		x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+		caracter1 = caracter3+x
+		caracter2 = caracter4+y
+
 
 #Función que convierte en reina a una ficha cuando llega a la primera linea del color contrario.
 def promociona(caracter3, caracter4):
@@ -312,6 +356,8 @@ while seguir == True:
 		caracter4 = int(movimiento[3]) - 1
 
 		puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4)
+		comerEnCadena()
+
 
 	else:
 		seguir = False
