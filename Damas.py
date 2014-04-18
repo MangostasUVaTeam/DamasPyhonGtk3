@@ -43,6 +43,7 @@ seguir = True
 
 #Esta variable indica si se mueven las fichas blancas o las negras (Blancas = True , Negras =False)
 turno = "Negras"
+turnoColor = 0
 
 #Funciones
 
@@ -233,6 +234,8 @@ def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 				if (caracter4 != 0) and (tablero[caracter3 + x][caracter4 + y] == 0):
 				
 					comerFicha( caracter1, caracter2, caracter3, caracter4)
+					comerEnCadena(caracter3+x,caracter4+y)
+
 			
 				else:
 					print "Movimiento no valido. Ficha fuera de tablero o casilla ocupada"
@@ -286,13 +289,10 @@ def comerFicha( caracter1, caracter2, caracter3, caracter4):
 	
 	
 
-def comerEnCadena():
-	posibles =[]
+def comerEnCadena(caracter3,caracter4):
+	
 
-	posibles.append(["47","36","16"])
-	posibles.append(["47","36","34","32","12"])
-
-
+	posibles = calcularPosibles(caracter3,caracter4)
 
 
 	a = len(posibles[0])
@@ -324,22 +324,61 @@ def promociona(caracter3, caracter4):
 		tablero[caracter3][caracter4].tipo = 1
 
 
+def calcularPosibles(caracter3,caracter4):
+	copiaTablero = tablero[:]
+	posibles=[]
+	
+
+	original= str(caracter3)+str(caracter4)
+	for x in range (1,-2,-2):
+		for y in range(1,-2,-2):
+			try:
+				if ((copiaTablero[caracter3+x][caracter4+y] != 0) and (copiaTablero[caracter3+(2*x)][caracter4+(2*y)] == 0) and (copiaTablero[caracter3+x][caracter4+y].color != turnoColor)):
+					movi = str(caracter3+x)+ str (caracter4+y)
+
+					if (pertenece(movi,posibles)==True):
+						lista=[]
+
+						lista.append(original)
+						lista.append(movi)
+						posibles.append(lista)
+
+
+			except IndexError:
+				x=x
+	print posibles
+
+	x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+
+
+	return posibles
+
+def pertenece(movi,posibles):
+	try:
+		posibles.index(movi)
+		return False
+	except ValueError:
+		return True
+
 #Programa
 
 #Controla la continuidad de la aplicacion.
 while seguir == True:
-	if (os.name == "nt"):
+	"""if (os.name == "nt"):
 		os.system("cls")
 	else:
-		os.system("clear")
+		os.system("clear")"""
 
 	verTablero()
 
 	if turno == "Negras":
 		turno = "Blancas"
+		turnoColor = 1 
 
 	else:
 		turno = "Negras"
+		turnoColor = 0
+
 	
 	print "Turno de las " + turno
 
@@ -356,7 +395,6 @@ while seguir == True:
 		caracter4 = int(movimiento[3]) - 1
 
 		puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4)
-		comerEnCadena()
 
 
 	else:
