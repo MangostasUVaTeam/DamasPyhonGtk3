@@ -247,8 +247,12 @@ def puedeMover(movimiento, caracter1, caracter2, caracter3, caracter4):
 #Devuleve la dirección del movimiento en dos variables
 def direcMovimiento(caracter1, caracter2, caracter3, caracter4):
 
-	x = (caracter3 - caracter1)/calcularDistancia(caracter1, caracter3)
-	y = (caracter4 - caracter2)/calcularDistancia(caracter1, caracter3)
+	divisor = calcularDistancia(caracter1, caracter3)
+	if divisor == 0:
+		divisor =1
+
+	x = (caracter3 - caracter1)/divisor
+	y = (caracter4 - caracter2)/divisor
 
 	return x,y
 
@@ -291,31 +295,37 @@ def comerFicha( caracter1, caracter2, caracter3, caracter4):
 
 def comerEnCadena(caracter3,caracter4):
 	
-
+	posibles=[]
 	posibles = calcularPosibles(caracter3,caracter4)
-
-
-	a = len(posibles[0])
-	movimientos = posibles[0]
-	for i in posibles:
-		b = len(i)
-		if (a<b):
-			movimientos = i
-
-
-	distancia = len(movimientos)-1
-	caracter1=int(movimientos[0][0])
-	caracter2=int(movimientos[0][1])
-
-	for recorrido in range(distancia):	
 	
-		caracter3=int(movimientos[recorrido+1][0])
-		caracter4=int(movimientos[recorrido+1][1])
-		comerFicha(caracter1,caracter2,caracter3,caracter4)
+	"""posibles.append(["47","36","16"])
+	posibles.append(["47","36","34","32","12"])
+	posibles.append(["47","36","34","54"])"""
 
-		x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
-		caracter1 = caracter3+x
-		caracter2 = caracter4+y
+
+	if (len(posibles)>0):
+		a = len(posibles[0])
+		movimientos = posibles[0]
+		for i in posibles:
+			b = len(i)
+			if (a<=b):
+				movimientos = i
+				a = b
+
+
+		distancia = len(movimientos)-1
+		caracter1=caracter3
+		caracter2=caracter4
+
+		for recorrido in range(distancia):	
+		
+			caracter3=int(movimientos[recorrido+1][0])
+			caracter4=int(movimientos[recorrido+1][1])
+			comerFicha(caracter1,caracter2,caracter3,caracter4)
+
+			x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+			caracter1 = caracter3+x
+			caracter2 = caracter4+y
 
 
 #Función que convierte en reina a una ficha cuando llega a la primera linea del color contrario.
@@ -327,38 +337,64 @@ def promociona(caracter3, caracter4):
 def calcularPosibles(caracter3,caracter4):
 	copiaTablero = tablero[:]
 	posibles=[]
+	posiblesCopia= []
 	
-
 	original= str(caracter3)+str(caracter4)
-	for x in range (1,-2,-2):
-		for y in range(1,-2,-2):
-			try:
-				if ((copiaTablero[caracter3+x][caracter4+y] != 0) and (copiaTablero[caracter3+(2*x)][caracter4+(2*y)] == 0) and (copiaTablero[caracter3+x][caracter4+y].color != turnoColor)):
-					movi = str(caracter3+x)+ str (caracter4+y)
 
-					if (pertenece(movi,posibles)==True):
-						lista=[]
+	posibles.append([original, original])
+	while (posibles != posiblesCopia):
+		posiblesCopia = posibles[:]
+		for x in range (1,-2,-2):
+			for y in range(1,-2,-2):
+				for i in posibles:
+					lista = i[:]
+					valor = lista.pop()
+					valor1 = int(valor[0])
+					valor2 = int(valor[1])
+					if valor1>=0 and valor2 >=0:
 
-						lista.append(original)
-						lista.append(movi)
-						posibles.append(lista)
+						try:
+							if (tablero[valor1+x][valor2+y] != 0) and (tablero[valor1+(2*x)][valor2+(2*y)] == 0) and (tablero[valor1+x][valor2+y].color != turnoColor):
+								
+								if (valor1+2*x >= 0) and (valor2+2*y >= 0):
+
+									movi = str(valor1+x)+ str (valor2+y)
+								
+									sig = str(valor1+(2*x))+ str (valor2+(2*y))
+
+									if (perteneceALista(movi,lista)==False):
+								
+
+										lista.append(movi)
+										lista.append(sig)
+										if (perteneceALista(lista, posibles)==False):
+
+											posibles.append(lista)
+									
 
 
-			except IndexError:
-				x=x
+						except IndexError:
+							x=x
+						
+
+	for k in posibles:
+		k.pop()
+
 	print posibles
 
-	x,y = direcMovimiento(caracter1, caracter2, caracter3, caracter4)
+
+	
+
 
 
 	return posibles
 
-def pertenece(movi,posibles):
+def perteneceALista(movi,posibles):
 	try:
 		posibles.index(movi)
-		return False
-	except ValueError:
 		return True
+	except ValueError:
+		return False
 
 #Programa
 
