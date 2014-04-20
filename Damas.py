@@ -35,7 +35,7 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, 			0, 0, Ficha(0, "A6", 0), 0, 					0],
 
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
-			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
+			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]"""
 #Indica si el juego debe continuar o no
 seguir = True
 
