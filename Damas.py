@@ -5,7 +5,7 @@ import os
 
 #Tablero predeterminado para la partida.		
 
-"""tablero =  [[0, Ficha(0, "A2", 0), 0, 			0, 0, Ficha(0, "A6", 0), 0, 					0],
+tablero =  [[0, Ficha(0, "A2", 0), 0, 			0, 0, Ficha(0, "A6", 0), 0, 					0],
 
 			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, 		0, 0, Ficha(0, "B7", 0), 0],
 
@@ -19,7 +19,7 @@ import os
 
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
-			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]"""
+			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
 
 """tablero =  [[0,          0,          0,          0,          0,          0,          0,          0],
 
@@ -37,7 +37,7 @@ import os
 
 			[0,          0,          0,          0,          0,          0,          0,          0]]"""
 
-tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
+"""tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
 
 			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, Ficha(0, "B5", 0), 0, Ficha(0, "B7", 0), 0],
 
@@ -51,7 +51,7 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0
 
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
-			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
+			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]"""
 #Indica si el juego debe continuar o no
 seguir = True
 
@@ -300,6 +300,7 @@ def comerFicha(caracter1, caracter2, caracter3, caracter4):
 	
 #función que es llamada después de comer una ficha, come el mayor número de fichas posibles automáticamente
 def comerEnCadena(caracter3,caracter4):
+
 	
 	#posibles es una lista que almacena todas las posibles combinaciones de movimientos que se pueden dar. Para calcular los posibles movimientos se llama a calcularPosibles
 	posibles=[]
@@ -318,7 +319,7 @@ def comerEnCadena(caracter3,caracter4):
 			if (a<=b):
 				movimientos = i
 				a = b
-
+		print movimientos
 		#Se inicializan caracter 1 y 2 con los valores de caracter 3 y 4 respectivamente.
 		distancia = len(movimientos)
 		caracter1=caracter3
@@ -356,6 +357,7 @@ def calcularPosibles(caracter3,caracter4):
 	#Comprueba que "posibles" no sea igual que en la anterior pasaad
 	while (posibles != posiblesCopia):
 		posiblesCopia = posibles[:]
+		
 
 		#Recorre las cuatro direcciones
 		for x in range (1,-2,-2):
@@ -369,35 +371,79 @@ def calcularPosibles(caracter3,caracter4):
 					valor = lista.pop()
 					valor1 = int(valor[0])
 					valor2 = int(valor[1])
-					if (valor1>=0) and (valor2 >=0):
 
-						#Captura el caso de comprobar una casilla fuera del rango de la lista
-						try:
-							#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
-							if (tablero[valor1+x][valor2+y] != 0) and (tablero[valor1+(2*x)][valor2+(2*y)] == 0) and (tablero[valor1+x][valor2+y].color != turnoColor):
-								
-								if (valor1+2*x >= 0) and (valor2+2*y >= 0):
+					for r in i:
+						t=0
+						l=0
+						if (turnoColor == 1 and  r[0]=="1") or (turnoColor == 0 and r[0]=="6")or (tablero[valor1][valor2].tipo == 1):
+							for j in range(7):
+								t= x*(j)
+								l= y*(j)
 
-									#"movi" es el valor que se usará para comer la ficha mientras que "sig" es la casilla siguiente que se comprobará(después de usarse queda eliminado de la lista)
-									movi = str(valor1+x)+ str (valor2+y)
-									sig = str(valor1+(2*x))+ str (valor2+(2*y))
+							if (valor1>=0) and (valor2 >=0):
 
-									#si "movi" no pertenece a la lista de movimientos, se añaden
-									if (perteneceALista(movi,lista)==False):
-										lista.append(movi)
-										lista.append(sig)
+								#Captura el caso de comprobar una casilla fuera del rango de la lista
+								try:
+									#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
+									if (tablero[valor1+x+t][valor2+y+l] != 0) and (tablero[valor1+(2*x+t)][valor2+(2*y+l)] == 0) and (tablero[valor1+x+t][valor2+y+l].color != turnoColor):
+										
+										if (valor1+2*x+t >= 0) and (valor2+2*y+l >= 0):
 
-										#Si ya hay una lista con los mismos valores dentro de posibles, esta se descarta, sino, se añade.
-										if (perteneceALista(lista, posibles)==False):
-											posibles.append(lista)
-									
-						except IndexError:
-							x=x
+											#"movi" es el valor que se usará para comer la ficha mientras que "sig" es la casilla siguiente que se comprobará(después de usarse queda eliminado de la lista)
+											movi = str(valor1+x+t)+ str (valor2+y+l)
+											sig = str(valor1+(2*x+t))+ str (valor2+(2*y+l))
+										
+
+											#si "movi" no pertenece a la lista de movimientos, se añaden
+											if (perteneceALista(movi,lista)==False):
+												lista.append(movi)
+												lista.append(sig)
+
+												#Si ya hay una lista con los mismos valores dentro de posibles, esta se descarta, sino, se añade.
+												if (perteneceALista(lista, posibles)==False):
+													posibles.append(lista)
+
+								except IndexError:
+									x=x
+
+
+						else:	
+
+
+
+							if (valor1>=0) and (valor2 >=0):
+
+								#Captura el caso de comprobar una casilla fuera del rango de la lista
+								try:
+									#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
+									if (tablero[valor1+x][valor2+y] != 0) and (tablero[valor1+(2*x)][valor2+(2*y)] == 0) and (tablero[valor1+x][valor2+y].color != turnoColor):
+										
+										if (valor1+2*x >= 0) and (valor2+2*y >= 0):
+
+											#"movi" es el valor que se usará para comer la ficha mientras que "sig" es la casilla siguiente que se comprobará(después de usarse queda eliminado de la lista)
+											movi = str(valor1+x)+ str (valor2+y)
+											sig = str(valor1+(2*x))+ str (valor2+(2*y))
+
+											#si "movi" no pertenece a la lista de movimientos, se añaden
+											if (perteneceALista(movi,lista)==False):
+												lista.append(movi)
+												lista.append(sig)
+
+												#Si ya hay una lista con los mismos valores dentro de posibles, esta se descarta, sino, se añade.
+												if (perteneceALista(lista, posibles)==False):
+													posibles.append(lista)
+													print x, y
+													print lista
+
+											
+								except IndexError:
+									x=x
 						
 	#Elimina el último valor de cada una de las listas de movimientos dentro de posibles, ya que este es "sig", es decir, la próxima casilla a analizar(que en este caso no hay)						
 	for sigDelete in posibles:
 		sigDelete.pop()
 
+	print posibles
 	return posibles
 
 
