@@ -14,7 +14,7 @@
 		self.tipo = tipo
 
 
-	#Función que devuelve las fichas para ser impresas
+	#Funcion que devuelve las fichas para ser impresas
 	def verFicha(self):
 
 		if self.color == 0:
