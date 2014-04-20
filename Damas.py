@@ -64,7 +64,13 @@ turnoColor = 0
 
 #Imprime el tablero en el terminal
 def verTablero():
-	print "  +-----------------+"
+	print
+	print "  Damas - Adrian Calvo Rojo & Sergio García Prado"
+	print
+	print "	Fichas blancas: " + str(numFichas(1)) + "	Fichas negras: " + str(numFichas(0))
+	print
+	print "		    1 2 3 4 5 6 7 8"
+	print "		  +-----------------+"
 	for y in range(-7, 1):
 		linea = ""
 		
@@ -72,9 +78,7 @@ def verTablero():
 		y = abs(y)
 
 		#Genera la letra de cada fila
-		linea += chr(y+65)
-		
-			
+		linea += "		 " + chr(y+65)	
 		linea += "| "
 		
 		#Bucle que recorre el tablero e imprime un guión en el caso de que una casilla esté vacia o la ficha correspondiente.
@@ -83,10 +87,16 @@ def verTablero():
 				linea += "- "
 			else:
 				linea += tablero[y][x].verFicha() + " "
-		print linea + "|"
+		linea += "|"
+		linea += chr(y+65)
+		print linea
 
-	print "  +-----------------+"
-	print "    1 2 3 4 5 6 7 8"
+	print "		  +-----------------+"
+	print "		    1 2 3 4 5 6 7 8" 
+	print 
+
+
+
 
 #Comprueba si la entrada del usuario es valida
 def entradaPermitida(movimiento):
@@ -364,64 +374,46 @@ def calcularPosibles(c3,c4):
 						
 							for j in range(7):
 							
-								t = x * j
-								l = y * j
+								superX = x * j
+								superY = y * j
+								addPosibles(valor1,valor2, x,y, lista,posibles, superX, superY)
 
-								if (valor1 >= 0) and (valor2 >= 0):
-
-									#Captura el caso de comprobar una casilla fuera del rango de la lista
-									try:
-										#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
-										if (tablero[valor1+x+t][valor2+y+l] != 0) and (tablero[valor1+(2*x+t)][valor2+(2*y+l)] == 0) and (tablero[valor1+x+t][valor2+y+l].color != turnoColor):
-											
-											if (valor1+2*x+t >= 0) and (valor2+2*y+l >= 0):
-
-												#"movi" es el valor que se usará para comer la ficha mientras que "sig" es la casilla siguiente que se comprobará(después de usarse queda eliminado de la lista)
-												movi = str(valor1+x+t)+ str (valor2+y+l)
-												sig = str(valor1+(2*x+t))+ str (valor2+(2*y+l))
-											
-
-												#si "movi" no pertenece a la lista de movimientos, se añaden
-												if (perteneceALista(movi, lista) == False):
-													lista.append(movi)
-													lista.append(sig)
-
-													#Si ya hay una lista con los mismos valores dentro de posibles, esta se descarta, sino, se añade.
-													if (perteneceALista(lista, posibles) == False):
-														posibles.append(lista)
-														
-									except IndexError:
-										x=x
-										
 						else:	
-							if (valor1>=0) and (valor2 >=0):
+							addPosibles(valor1,valor2, x,y, lista,posibles, 0, 0)
 
-								#Captura el caso de comprobar una casilla fuera del rango de la lista
-								try:
-									#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
-									if (tablero[valor1+x][valor2+y] != 0) and (tablero[valor1+(2*x)][valor2+(2*y)] == 0) and (tablero[valor1+x][valor2+y].color != turnoColor):
-										
-										if (valor1+2*x >= 0) and (valor2+2*y >= 0):
-
-											#"movi" es el valor que se usará para comer la ficha mientras que "sig" es la casilla siguiente que se comprobará(después de usarse queda eliminado de la lista)
-											movi = str(valor1+x)+ str (valor2+y)
-											sig = str(valor1+(2*x))+ str (valor2+(2*y))
-
-											#si "movi" no pertenece a la lista de movimientos, se añaden
-											if (perteneceALista(movi,lista)==False):
-												lista.append(movi)
-												lista.append(sig)
-
-												#Si ya hay una lista con los mismos valores dentro de posibles, esta se descarta, sino, se añade.
-												if (perteneceALista(lista, posibles)==False):
-													posibles.append(lista)		
-													
-								except IndexError:
-									x=x
 						
 	#Elimina el último valor de cada una de las listas de movimientos dentro de posibles, ya que este es "sig", es decir, la próxima casilla a analizar(que en este caso no hay)						
 	for sigDelete in posibles:
 		sigDelete.pop()
+
+	return posibles
+
+def addPosibles(valor1,valor2, x,y, lista,posibles, superX, superY):
+	if (valor1 >= 0) and (valor2 >= 0):
+
+		#Captura el caso de comprobar una casilla fuera del rango de la lista
+		try:
+			#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
+			if (tablero[valor1+x+superX][valor2+y+superY] != 0) and (tablero[valor1+(2*x+superX)][valor2+(2*y+superY)] == 0) and (tablero[valor1+x+superX][valor2+y+superY].color != turnoColor):
+				
+				if (valor1+2*x+superX >= 0) and (valor2+2*y+superY >= 0):
+
+					#"movi" es el valor que se usará para comer la ficha mientras que "sig" es la casilla siguiente que se comprobará(después de usarse queda eliminado de la lista)
+					movi = str(valor1+x+superX)+ str (valor2+y+superY)
+					sig = str(valor1+(2*x+superX))+ str (valor2+(2*y+superY))
+				
+
+					#si "movi" no pertenece a la lista de movimientos, se añaden
+					if (perteneceALista(movi, lista) == False):
+						lista.append(movi)
+						lista.append(sig)
+
+						#Si ya hay una lista con los mismos valores dentro de posibles, esta se descarta, sino, se añade.
+						if (perteneceALista(lista, posibles) == False):
+							posibles.append(lista)
+							
+		except IndexError:
+			x=x
 
 	return posibles
 
@@ -435,8 +427,8 @@ def perteneceALista(movi, posibles):
 	except ValueError:
 		return False
 
-#Función que booleana para comprobar si se el jugador contrario se ha quedado sin fichas.
-def sinFichas(tablero, turnoColor):
+#Función que devuelve las fichas que quedan del color que se indica.
+def numFichas(turnoColor):
 	fichas = 0 
 
 	#Recorre la lista y va incrementando "fichas" por cada ficha del jugador contrario que se encuentra
@@ -446,11 +438,7 @@ def sinFichas(tablero, turnoColor):
 				if turnoColor != tablero[x][y].color:
 					fichas = fichas + 1
 
-	#Si no ha encontrado ninguna devuelve verdadero, sino, devuelve falso
-	if fichas == 0:
-		return True
-	else:
-		return False
+	return fichas
 
 
 #Programa
@@ -473,10 +461,10 @@ while seguir == True:
 	else:
 		turno = "Negras"
 		turnoColor = 0
-	print "Turno de las " + turno
+	print "  Turno de las " + turno
 
 	#Pregunta al usuario por el movimiento a realizar y convierte todos los caracteres a letras mayusculas, en el caso de que el usuario las haya introducido en minúsculas
-	movimiento = str(raw_input("Indique el movimiento: ")).upper()
+	movimiento = str(raw_input("  Indique el movimiento: ")).upper()
 
 	#Si el movimiento que se pretende realizar no es válido se salta el resto del flujo del programa y se termina.
 	if entradaPermitida(movimiento) == True:
@@ -491,13 +479,13 @@ while seguir == True:
 		puedeMover(c1, c2, c3, c4)
 
 		#Comprueba si el juego a terminado o no.
-		if sinFichas(tablero, turnoColor) == True:
+		if numFichas(turnoColor) == 0:
 		
 			seguir = False
 			verTablero()
-			print "Enhorabuena! Las " + turno + " ganan la partida, el jugador contrario se ha quedado sin fichas."
+			print "  Enhorabuena! Las " + turno + " ganan la partida, el jugador contrario se ha quedado sin fichas."
 
 	else:
 		seguir = False
 
-print "El juego ha terminado"
+print "  El juego ha terminado"
