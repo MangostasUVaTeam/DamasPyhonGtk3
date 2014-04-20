@@ -21,22 +21,6 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, 			0, 0, Ficha(0, "A6", 0), 0, 					0],
 
 			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
 
-"""tablero =  [[0,          0,          0,          0,          0,          0,          0,          0],
-
-			[0, 0, Ficha(0, "B3", 0), 0, 		0, 0, 0, 0],
-
-			[0, 0, 0,0, 0, 0, 0, 0],
-
-			[0,          0,          0,          0,          Ficha(1, "C4", 0),          0,          0,          0],
-
-			[0,          0,          0,          0,          0,          0,          0,          0],
-
-			[0,          0,          0,          0,          0,          0,          0,          0],
-
-			[0,          0,          0,          0,          0,          0,          0,          0],
-
-			[0,          0,          0,          0,          0,          0,          0,          0]]"""
-
 """tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
 
 			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, Ficha(0, "B5", 0), 0, Ficha(0, "B7", 0), 0],
@@ -51,7 +35,7 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, 			0, 0, Ficha(0, "A6", 0), 0, 					0],
 
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
-			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]"""
+			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
 #Indica si el juego debe continuar o no
 seguir = True
 
@@ -67,7 +51,7 @@ def verTablero():
 	print
 	print "  Damas - Adrian Calvo Rojo & Sergio García Prado"
 	print
-	print "	Fichas blancas: " + str(numFichas(1)) + "	Fichas negras: " + str(numFichas(0))
+	print "	Fichas blancas: " + str(numFichas(0)) + "	Fichas negras: " + str(numFichas(1))
 	print
 	print "		    1 2 3 4 5 6 7 8"
 	print "		  +-----------------+"
