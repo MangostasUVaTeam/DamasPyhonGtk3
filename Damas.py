@@ -72,22 +72,8 @@ def verTablero():
 		y = abs(y)
 
 		#Genera la letra de cada fila
-		if y == 7:
-			linea += "H "
-		elif y == 6:
-			linea += "G "
-		elif y == 5:
-			linea += "F "
-		elif y == 4:
-			linea += "E "
-		elif y == 3:
-			linea += "D "
-		elif y == 2:
-			linea += "C "
-		elif y == 1:
-			linea += "B "
-		else:
-			linea += "A "
+		linea += chr(y+65)
+		
 			
 		linea += "| "
 		
@@ -372,39 +358,40 @@ def calcularPosibles(caracter3,caracter4):
 					valor1 = int(valor[0])
 					valor2 = int(valor[1])
 
+
 					for r in i:
 						t=0
 						l=0
-						if (turnoColor == 1 and  r[0]=="1") or (turnoColor == 0 and r[0]=="6")or (tablero[valor1][valor2].tipo == 1):
+						if (turnoColor == 1 and  r[0]=="1") or (turnoColor == 0 and r[0]=="6") or (tablero[caracter3][caracter4].tipo == 1):
 							for j in range(7):
 								t= x*(j)
 								l= y*(j)
 
-							if (valor1>=0) and (valor2 >=0):
+								if (valor1>=0) and (valor2 >=0):
 
-								#Captura el caso de comprobar una casilla fuera del rango de la lista
-								try:
-									#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
-									if (tablero[valor1+x+t][valor2+y+l] != 0) and (tablero[valor1+(2*x+t)][valor2+(2*y+l)] == 0) and (tablero[valor1+x+t][valor2+y+l].color != turnoColor):
-										
-										if (valor1+2*x+t >= 0) and (valor2+2*y+l >= 0):
+									#Captura el caso de comprobar una casilla fuera del rango de la lista
+									try:
+										#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
+										if (tablero[valor1+x+t][valor2+y+l] != 0) and (tablero[valor1+(2*x+t)][valor2+(2*y+l)] == 0) and (tablero[valor1+x+t][valor2+y+l].color != turnoColor):
+											
+											if (valor1+2*x+t >= 0) and (valor2+2*y+l >= 0):
 
-											#"movi" es el valor que se usará para comer la ficha mientras que "sig" es la casilla siguiente que se comprobará(después de usarse queda eliminado de la lista)
-											movi = str(valor1+x+t)+ str (valor2+y+l)
-											sig = str(valor1+(2*x+t))+ str (valor2+(2*y+l))
-										
+												#"movi" es el valor que se usará para comer la ficha mientras que "sig" es la casilla siguiente que se comprobará(después de usarse queda eliminado de la lista)
+												movi = str(valor1+x+t)+ str (valor2+y+l)
+												sig = str(valor1+(2*x+t))+ str (valor2+(2*y+l))
+											
 
-											#si "movi" no pertenece a la lista de movimientos, se añaden
-											if (perteneceALista(movi,lista)==False):
-												lista.append(movi)
-												lista.append(sig)
+												#si "movi" no pertenece a la lista de movimientos, se añaden
+												if (perteneceALista(movi,lista)==False):
+													lista.append(movi)
+													lista.append(sig)
 
-												#Si ya hay una lista con los mismos valores dentro de posibles, esta se descarta, sino, se añade.
-												if (perteneceALista(lista, posibles)==False):
-													posibles.append(lista)
+													#Si ya hay una lista con los mismos valores dentro de posibles, esta se descarta, sino, se añade.
+													if (perteneceALista(lista, posibles)==False):
+														posibles.append(lista)
 
-								except IndexError:
-									x=x
+									except IndexError:
+										x=x
 
 
 						else:	
@@ -432,8 +419,6 @@ def calcularPosibles(caracter3,caracter4):
 												#Si ya hay una lista con los mismos valores dentro de posibles, esta se descarta, sino, se añade.
 												if (perteneceALista(lista, posibles)==False):
 													posibles.append(lista)
-													print x, y
-													print lista
 
 											
 								except IndexError:
@@ -443,7 +428,6 @@ def calcularPosibles(caracter3,caracter4):
 	for sigDelete in posibles:
 		sigDelete.pop()
 
-	print posibles
 	return posibles
 
 
