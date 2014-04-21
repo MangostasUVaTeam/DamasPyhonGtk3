@@ -77,7 +77,7 @@ def entradaPermitida(movimiento):
 	#Comprueba si la orden está compuesta por 4 caracteres
 	longitud = len(movimiento)
 	if longitud != 4:
-		print "Fallo: Debe introducir 4 caracteres."
+		print "  Fallo: Debe introducir 4 caracteres. \n"
 		return False
 
 	#Caracter1
@@ -87,7 +87,7 @@ def entradaPermitida(movimiento):
 
 	#Comprueba si es una letra mayuscula entre A y H
 	if (c1 > 7 or c1 < 0):
-		print "Fallo primer caracter: " + movimiento[0] + " El caracter debe estar entre A y H."
+		print "  Fallo primer caracter: " + movimiento[0] + " El caracter debe estar entre A y H. \n"
 		return False
 
 	#Caracter2
@@ -96,12 +96,12 @@ def entradaPermitida(movimiento):
 	try:
 		c2 = int(movimiento[1])-1
 	except ValueError:
-		print "Fallo segundo caracter: " + movimiento[1] + " El numero debe estar estar entre 1 y 8."
+		print "  Fallo segundo caracter: " + movimiento[1] + " El numero debe estar estar entre 1 y 8. \n"
 		return False
 
 	#Comprueba si es un número entre 1 y 8
 	if c2 > 7 or c2 < 0:
-		print "Fallo segundo caracter: " + movimiento[1] + " El numero debe estar estar entre 1 y 8."
+		print "  Fallo segundo caracter: " + movimiento[1] + " El numero debe estar estar entre 1 y 8. \n"
 		return False
 
 	#Caracter3
@@ -111,7 +111,7 @@ def entradaPermitida(movimiento):
 
 	#Comprueba si es una letra mayuscula entre A y H
 	if (c3 > 7 or c3 < 0):
-		print "Fallo tercer caracter: " + movimiento[2] + " El caracter debe estar entre A y H."
+		print "  Fallo tercer caracter: " + movimiento[2] + " El caracter debe estar entre A y H. \n"
 		return False
 
 	#Caracter4
@@ -120,25 +120,25 @@ def entradaPermitida(movimiento):
 	try:
 		c4 = int(movimiento[3])-1
 	except ValueError:
-		print "Fallo cuarto caracter: " + movimiento[3] + " El numero debe estar estar entre 1 y 8."
+		print "  Fallo cuarto caracter: " + movimiento[3] + " El numero debe estar estar entre 1 y 8. \n"
 		return False
 
 	#Comprueba si es un número entre 1 y 8
 	if c4 > 7 or c4 < 0:
-		print "Fallo cuarto caracter: " + movimiento[3] + " El numero debe estar estar entre 1 y 8."
+		print "  Fallo cuarto caracter: " + movimiento[3] + " El numero debe estar estar entre 1 y 8. \n"
 		return False
 
 
 	#Buscamos que el movimiento sea solo en las casillas blancas
 	if (abs(c3) - c4+1) % 2 != 0:
 		
-		print "Solo se puede mover en las casillas blancas"	
+		print "  Solo se puede mover en las casillas blancas. \n"	
 		return False
 
 	#Comprobamos si el movimiento es solo en diagonal
 	if abs(c1 - c3) != abs(c2 - c4):
 
-		print "Solo se puede mover en diagonal"
+		print "  Solo se puede mover en diagonal. \n"
 		return False
 
 	#Try-except que captura el caso de que la casilla no tenga ficha
@@ -146,18 +146,18 @@ def entradaPermitida(movimiento):
 		#Comprueba que el movimiento de los peones solo es de una unidad
 		if (tablero[c1][c2].tipo == 0) and calcularDistancia(c1, c3) != 1:
 
-			print "Los peones solo se pueden mover con distancia 1"
+			print "  Los peones solo se pueden mover con distancia 1. \n"
 			return False
 
 		#Comprueba que no se haya movido la ficha del jugador rival
 		if ((tablero [c1][c2].color == 0) and (turno == "Blancas")) or ((tablero [c1][c2].color == 1) and (turno == "Negras")): 
 
-			print "No puede mover las fichas del jugador contrario. Tramposo!!"
+			print "  No puede mover las fichas del jugador contrario. Tramposo!! \n"
 			return False
 
 		#Comprueba que la ficha que se quiere comer no sea del mismo color que la que come.
 		if (tablero[c3][c4] != 0) and (tablero[c1][c2].color == tablero[c3][c4].color):
-			print "No se pueden comer fichas propias"
+			print "  No se pueden comer fichas propias. \n"
 			return False
 		
 		#Calculamos la distancia y la direccion de las coordenadas (x, y)
@@ -175,10 +175,10 @@ def entradaPermitida(movimiento):
 				i += 1
 				
 				if tablero[c1 + lado][c2 + arriba] != 0:
-					print "Las reinas no pueden saltar peones."
+					print "  Las reinas no pueden saltar peones. \n"
 					return False
 	except AttributeError:
-		print "La casilla está vacía"
+		print "  La casilla esta vacia \n"
 		return False
 
 	#En caso de que no se cumpla ningun caso anterior, quiere decir que la entrada del usuario ha sido correcta, por lo que devuelve verdadero
@@ -431,6 +431,7 @@ while seguir == True:
 
 	#Pregunta al usuario por el movimiento a realizar y convierte todos los caracteres a letras mayusculas, en el caso de que el usuario las haya introducido en minúsculas
 	movimiento = str(raw_input("  Indique el movimiento: ")).upper()
+	print
 
 	#Si el movimiento que se pretende realizar no es válido se salta el resto del flujo del programa y se termina.
 	if entradaPermitida(movimiento) == True:
