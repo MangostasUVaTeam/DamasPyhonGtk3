@@ -4,24 +4,7 @@ import os
 #Variables:
 
 #Tablero predeterminado para la partida.		
-
-tablero =  [[0, Ficha(0, "A2", 0), 0, 			0, 0, Ficha(0, "A6", 0), 0, 					0],
-
-			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, 		0, 0, Ficha(0, "B7", 0), 0],
-
-			[0, 0, 0, Ficha(0, "C4", 0), 0, 0, 0, Ficha(0, "C8", 0)],
-
-			[0,          0,         Ficha(0, "B5", 0),0,Ficha(0, "B5", 0),0,  Ficha(0, "B5", 0),  0],
-
-			[0,          0,          0,          0,          0,          0,          0,          0],
-
-			[Ficha(1, "F1", 0), 0, Ficha(1, "F3", 0), 0, Ficha(0, "F5", 0), 0, Ficha(0, "F7", 0), 0],
-
-			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
-
-			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
-
-"""tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
+tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
 
 			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, Ficha(0, "B5", 0), 0, Ficha(0, "B7", 0), 0],
 
@@ -35,7 +18,7 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, 			0, 0, Ficha(0, "A6", 0), 0, 					0],
 
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
-			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]"""
+			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
 #Indica si el juego debe continuar o no
 seguir = True
 
@@ -47,12 +30,19 @@ turnoColor = 0
 #Funciones
 
 #Imprime el tablero en el terminal
-def verTablero():
+def verTablero():	
+	
+	#Sirve para limpiar el terminal en cada pasada, y que así se vea más limpio el tablero.
+	if (os.name == "nt"):
+		os.system("cls")
+	else:
+		os.system("clear")
+		
 	print
-	print "  Damas - Adrian Calvo Rojo & Sergio García Prado"
-	print
-	print "	Fichas blancas: " + str(numFichas(0)) + "	Fichas negras: " + str(numFichas(1))
-	print
+	print "  Damas - Adrian Calvo Rojo & Sergio Garcia Prado \n"
+
+	print "	Fichas blancas: " + str(numFichas(0)) + "	Fichas negras: " + str(numFichas(1)) + "\n"
+
 	print "		    1 2 3 4 5 6 7 8"
 	print "		  +-----------------+"
 	for y in range(-7, 1):
@@ -76,8 +66,7 @@ def verTablero():
 		print linea
 
 	print "		  +-----------------+"
-	print "		    1 2 3 4 5 6 7 8" 
-	print 
+	print "		    1 2 3 4 5 6 7 8 \n" 
 
 
 
@@ -343,21 +332,19 @@ def calcularPosibles(c3,c4):
 				#Recorre cada una de las posibilidades (listas dentro de posibles)
 				for i in posibles:
 
-					#Copia la iteración en lista, y extrae el último valor en "lista1" y "lista2" y si estos son mayores que 0 sigue con el flujo del programa.
+					#Copia la iteracion en lista, y extrae el último valor en "lista1" y "lista2" y si estos son mayores que 0 sigue con el flujo del programa.
 					lista = i[:]
 					valor = lista.pop()
 					valor1 = int(valor[0])
 					valor2 = int(valor[1])
 
-
+					#Recorre todos los movimientos
 					for r in i:
-						t = 0
-						l = 0
-						
+
+						#Si encuentra que una ficha es o se ha transformado en reina, recorre la diagonal, sino solo mira la posicion siguiente.
 						if (turnoColor == 1 and  r[0] == "1") or (turnoColor == 0 and r[0] == "6") or (tablero[c3][c4].tipo == 1):
 						
-							for j in range(7):
-							
+							for j in range(5):
 								superX = x * j
 								superY = y * j
 								addPosibles(valor1,valor2, x,y, lista,posibles, superX, superY)
@@ -366,7 +353,7 @@ def calcularPosibles(c3,c4):
 							addPosibles(valor1,valor2, x,y, lista,posibles, 0, 0)
 
 						
-	#Elimina el último valor de cada una de las listas de movimientos dentro de posibles, ya que este es "sig", es decir, la próxima casilla a analizar(que en este caso no hay)						
+	#Elimina el oltimo valor de cada una de las listas de movimientos dentro de posibles, ya que este es "sig", es decir, la próxima casilla a analizar(que en este caso no hay)						
 	for sigDelete in posibles:
 		sigDelete.pop()
 
@@ -430,11 +417,6 @@ def numFichas(turnoColor):
 #Controla la continuidad de la aplicacion.
 while seguir == True:
 
-	#Sirve para limpiar el terminal en cada pasada, y que así se vea más limpio el tablero.
-	if (os.name == "nt"):
-		os.system("cls")
-	else:
-		os.system("clear")
 
 	verTablero()
 
@@ -467,9 +449,9 @@ while seguir == True:
 		
 			seguir = False
 			verTablero()
-			print "  Enhorabuena! Las " + turno + " ganan la partida, el jugador contrario se ha quedado sin fichas."
+			print "  Enhorabuena! Las " + turno + " ganan la partida, el jugador contrario se ha quedado sin fichas. \n"
 
 	else:
 		seguir = False
 
-print "  El juego ha terminado"
+print "  El juego ha terminado \n"
