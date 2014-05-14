@@ -1,5 +1,6 @@
 ﻿from Ficha import Ficha
 import os
+import copy
 
 #Variables:
 
@@ -19,6 +20,8 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
 			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
+
+
 #Indica si el juego debe continuar o no
 seguir = True
 
@@ -32,11 +35,11 @@ turnoColor = 0
 #Imprime el tablero en el terminal
 def verTablero():	
 	
-	#Sirve para limpiar el terminal en cada pasada, y que así se vea más limpio el tablero.
+	"""#Sirve para limpiar el terminal en cada pasada, y que así se vea más limpio el tablero.
 	if (os.name == "nt"):
 		os.system("cls")
 	else:
-		os.system("clear")
+		os.system("clear")"""
 		
 	print
 	print "  Damas - Adrian Calvo Rojo & Sergio Garcia Prado \n"
@@ -67,8 +70,6 @@ def verTablero():
 
 	print "		  +-----------------+"
 	print "		    1 2 3 4 5 6 7 8 \n" 
-
-
 
 
 #Comprueba si la entrada del usuario es valida
@@ -244,6 +245,8 @@ def mover(c1, c2, c3, c4):
 
 	promociona(c3, c4)
 
+	#ficheroMovs.write(str(chr(c1+65)) + str(c2+1) + str(chr(c3+65)) + str(c4+1) +"\n")
+
 
 #función que mueve la ficha a la posición siguiente de la indicada y elimina la ficha de la posición marcada, es decir, la come-
 def comerFicha(c1, c2, c3, c4):
@@ -264,11 +267,12 @@ def comerFicha(c1, c2, c3, c4):
 
 	promociona(c3 + x, c4 + y)
 	
+	#ficheroMovs.write(str(chr(c1+65)) + str(c2+1) + str(chr(c3+65)) + str(c4+1) +"\n")
+
 	
 #función que es llamada después de comer una ficha, come el mayor número de fichas posibles automáticamente
 def comerEnCadena(c3,c4):
 
-	
 	#posibles es una lista que almacena todas las posibles combinaciones de movimientos que se pueden dar. Para calcular los posibles movimientos se llama a calcularPosibles
 	posibles = []
 	posibles = calcularPosibles(c3,c4)
@@ -310,6 +314,7 @@ def promociona(c3, c4):
 	
 		tablero[c3][c4].tipo = 1
 
+
 #Función que devuelve la lista de los posibles movimientos que puede hacer la ficha.
 def calcularPosibles(c3,c4):
 	#Creamos posibles y posibles copia, "posibles" será donde se almacenarán los posibles movimientos, "posiblesCopia" sirve para que si no ha cambiado nada en la siguiente iteración termine de buscar posibilidades, ya que no hay más.
@@ -319,11 +324,12 @@ def calcularPosibles(c3,c4):
 	#Es el primer valor, y desde donde se empezarán a analizar las posibles opciones.
 	original = str(c3) + str(c4)
 	posibles.append([original])
+	tableroPosibles = copy.deepcopy(tablero)
+	tableroPosibles[c3][c4]=0
 	
 	#Comprueba que "posibles" no sea igual que en la anterior pasaad
 	while (posibles != posiblesCopia):
 		posiblesCopia = posibles[:]
-		
 
 		#Recorre las cuatro direcciones
 		for x in range (1,-2,-2):
@@ -347,10 +353,18 @@ def calcularPosibles(c3,c4):
 							for j in range(5):
 								superX = x * j
 								superY = y * j
-								addPosibles(valor1,valor2, x,y, lista,posibles, superX, superY)
+
+								#Si encuentra una ficha del mismo color que el de la que está comiendo, deja de comprobar en esa direccion.
+								try: 
+									if tableroPosibles[valor1+x+superX][valor2+y+superY] != 0 and tablero[c3][c4].color == tableroPosibles[valor1+x+superX][valor2+y+superY].color:
+										break
+								except IndexError:
+										break
+
+								addPosibles(valor1,valor2, x,y, lista,posibles, superX, superY, tableroPosibles)
 
 						else:	
-							addPosibles(valor1,valor2, x,y, lista,posibles, 0, 0)
+							addPosibles(valor1,valor2, x,y, lista,posibles, 0, 0, tableroPosibles)
 
 						
 	#Elimina el oltimo valor de cada una de las listas de movimientos dentro de posibles, ya que este es "sig", es decir, la próxima casilla a analizar(que en este caso no hay)						
@@ -359,13 +373,13 @@ def calcularPosibles(c3,c4):
 
 	return posibles
 
-def addPosibles(valor1,valor2, x,y, lista,posibles, superX, superY):
+def addPosibles(valor1,valor2, x,y, lista,posibles, superX, superY,tableroPosibles):
 	if (valor1 >= 0) and (valor2 >= 0):
 
 		#Captura el caso de comprobar una casilla fuera del rango de la lista
 		try:
 			#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
-			if (tablero[valor1+x+superX][valor2+y+superY] != 0) and (tablero[valor1+(2*x+superX)][valor2+(2*y+superY)] == 0) and (tablero[valor1+x+superX][valor2+y+superY].color != turnoColor):
+			if (tableroPosibles[valor1+x+superX][valor2+y+superY] != 0) and (tableroPosibles[valor1+(2*x+superX)][valor2+(2*y+superY)] == 0) and (tableroPosibles[valor1+x+superX][valor2+y+superY].color != turnoColor):
 				
 				if (valor1+2*x+superX >= 0) and (valor2+2*y+superY >= 0):
 
@@ -384,7 +398,7 @@ def addPosibles(valor1,valor2, x,y, lista,posibles, superX, superY):
 							posibles.append(lista)
 							
 		except IndexError:
-			x=x
+			pass
 
 	return posibles
 
@@ -412,26 +426,66 @@ def numFichas(turnoColor):
 	return fichas
 
 
-#Programa
+#Carga un fichero con movimientos desde un archivo de texto con el nombre introducido por el usuario
+fichero = str(raw_input("  Indique el fichero desde el que se carga la partida: ")) + ".txt"
+try:
+	fich = open("partidas/" + fichero, "r")
+except IOError:
 
+	print
+	print "  No existe un fichero con ese nombre."
+	print
+
+	fich = ""
+
+
+#Crea un archivo con los movimientos de la partida, en el caso de que no se introduzca nombre se crea como default
+ficheroMovsNombre = str(raw_input("  Indique el fichero donde se guarda la partida: ")) + ".txt"
+
+if ficheroMovsNombre != "":
+	ficheroMovs = open("partidas/default.txt", "w")
+else:
+	ficheroMovs = open("partidas/" + ficheroMovsNombre, "w")
+
+
+
+#Programa
+jugadas =[]
 #Controla la continuidad de la aplicacion.
 while seguir == True:
 
+	tableroAnterior = copy.deepcopy(tablero)
+	jugadas.append(tableroAnterior)
 
 	verTablero()
+	
+	
 
 	#Conmuta el turno de cada color, y muestra en pantalla a quien le toca
 	if turno == "Negras":
 		turno = "Blancas"
-		turnoColor = 1 
+		turnoColor = 1
 	else:
 		turno = "Negras"
 		turnoColor = 0
 	print "  Turno de las " + turno
 
-	#Pregunta al usuario por el movimiento a realizar y convierte todos los caracteres a letras mayusculas, en el caso de que el usuario las haya introducido en minúsculas
-	movimiento = str(raw_input("  Indique el movimiento: ")).upper()
 	print
+
+	#Lee la siguiente linea del fichero, en el caso de que este vacia o no se haya introducido fichero, pide por teclado el movimiento
+	if fich != "":
+		cad = fich.readline(4)
+		fich.readline()
+		if cad != "":
+			movimiento = cad
+		else:
+			movimiento = str(raw_input("  Indique el movimiento: ")).upper()
+
+	else:
+		movimiento = str(raw_input("  Indique el movimiento: ")).upper()
+
+	
+	ficheroMovs.write(movimiento +"\n")
 
 	#Si el movimiento que se pretende realizar no es válido se salta el resto del flujo del programa y se termina.
 	if entradaPermitida(movimiento) == True:
@@ -455,4 +509,12 @@ while seguir == True:
 	else:
 		seguir = False
 
+	"""if deshacer == True:
+		if jugadas >0:
+			tablero = jugadas.pop()
+		else:
+			print "No se puede deshacer mas veces"
+	"""
+
 print "  El juego ha terminado \n"
+ficheroMovs.close()
