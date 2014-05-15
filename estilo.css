@@ -1,0 +1,41 @@
+#Ventana{
+	background-color: 		#2A2A2A;	
+	background-repeat:		no-repeat;
+}
+#FichaBlanca{
+	background-image:		url('Images/Blanca60.png');
+	background-repeat:		no-repeat;
+	background-position:   	center;
+	border:					none;
+	background-color:       rgba(0,0,0,0);
+}
+#FichaBlancaSel{
+	background-image:		url('Images/Blanca60.png');
+	background-repeat:		no-repeat;
+	background-position:   	center;
+	border:					2px double yellow;
+	border-radius: 			30px;
+	background-color:       rgba(0,0,0,0);
+}
+#FichaNegra{
+	background-image:		url('Images/Negra60.png');
+	background-repeat:		no-repeat;
+	background-position:   	center;
+	border:					none;
+	background-color:       rgba(0,0,0,0);
+}
+#FichaNegraSel{
+	background-image:		url('Images/Negra60.png');
+	background-repeat:		no-repeat;
+	background-position:   	center;
+	border:					2px double yellow;
+	border-radius: 			30px;
+	background-color:       rgba(0,0,0,0);
+}
+#Vacia{
+	background-image:		none;
+	background-repeat:		no-repeat;
+	background-position:   	center;
+	border:					none;
+	background-color:       rgba(0,0,0,0);
+}
