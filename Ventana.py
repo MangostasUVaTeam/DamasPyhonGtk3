@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import gtk
+from gi.repository import Gtk, Gdk
 from Ficha import Casilla
 
 mover = ""
@@ -29,7 +29,7 @@ def hover(casilla, posicion):
 """
 
 #Ventana
-win = gtk.Window()
+win = Gtk.Window()
 ancho = 480
 alto = 480
 win.set_name('Ventana')
@@ -39,7 +39,7 @@ win.set_default_size(640, alto)
 tablero = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
 
 #Layout Fixed con distancias en pixeles
-fix = gtk.Fixed()
+fix = Gtk.Fixed()
 
 #Disponer las casillas vacias y con fichas en el tablero
 for a in range(8):
@@ -67,17 +67,17 @@ for x in range(8):
 win.add(fix)
 
 #Evento de cerrar al cerrar la ventana
-win.connect("delete-event", gtk.main_quit)
+win.connect("delete-event", Gtk.main_quit)
 
 #Cargar estilos de un fichero
-style_provider = gtk.CssProvider()
+style_provider = Gtk.CssProvider()
 
 css = open('css/estilo.css', 'rb')
 css_data = css.read()
 css.close()
 
 style_provider.load_from_data(css_data)
-gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), style_provider, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 win.show_all()
-gtk.main()
+Gtk.main()
