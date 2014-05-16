@@ -1,11 +1,11 @@
-﻿from Ficha import Ficha
+﻿from Ficha import Casilla
 import os
 import copy
 
 #Variables:
 
 #Tablero predeterminado para la partida.		
-tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
+"""tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0, Ficha(0, "A8", 0)],
 
 			[Ficha(0, "B1", 0), 0, Ficha(0, "B3", 0), 0, Ficha(0, "B5", 0), 0, Ficha(0, "B7", 0), 0],
 
@@ -19,7 +19,20 @@ tablero =  [[0, Ficha(0, "A2", 0), 0, Ficha(0, "A4", 0), 0, Ficha(0, "A6", 0), 0
 
 			[0, Ficha(1, "G2", 0), 0, Ficha(1, "G4", 0), 0, Ficha(1, "G6", 0), 0, Ficha(1, "G8", 0)],
 
-			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]
+			[Ficha(1, "H1", 0), 0, Ficha(1, "H3", 0), 0, Ficha(1, "H5", 0), 0, Ficha(1, "H7", 0), 0]]"""
+tablero = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+#Disponer las casillas vacias y con fichas en el tablero
+for y in range(8):
+	for x in range(8):
+		if (y == 0 or y == 1 or y == 2) and ((y-x)%2 != 0):
+			tablero[y][x] = Casilla(0,0, chr(65+y)+str(x+1),False)
+		elif (y == 5 or y == 6 or y == 7) and ((y-x)%2 != 0):				
+			tablero[y][x] = Casilla(1,0, chr(65+y)+str(x+1),False)
+		else:
+			tablero[y][x] = Casilla(0,0, chr(65+x)+str(x+1),True)
+		#Dar los eventos a cada casilla
+		#tablero[a][b].connect("clicked", selecionarMovi, tablero[a][b].posicion)
+		#tablero[a][b].connect("enter", hover, tablero[a][b].posicion)
 
 
 #Indica si el juego debe continuar o no
@@ -60,7 +73,7 @@ def verTablero():
 		
 		#Bucle que recorre el tablero e imprime un guión en el caso de que una casilla esté vacia o la ficha correspondiente.
 		for x in range(8):
-			if type(tablero[y][x]) == int:
+			if tablero[y][x].vacia == True:
 				linea += "- "
 			else:
 				linea += tablero[y][x].verFicha() + " "
@@ -74,61 +87,17 @@ def verTablero():
 
 #Comprueba si la entrada del usuario es valida
 def entradaPermitida(movimiento):
+
+	c1 = ord(movimiento[0]) - 65
+	c2 = int(movimiento[1]) - 1
+	c3 = ord(movimiento[2]) - 65
+	c4 = int(movimiento[3]) - 1
 	
 	#Comprueba si la orden está compuesta por 4 caracteres
 	longitud = len(movimiento)
 	if longitud != 4:
 		print "  Fallo: Debe introducir 4 caracteres. \n"
 		return False
-
-	#Caracter1
-
-	#Convierte el carácter a un número
-	c1 = ord(movimiento[0]) - 65
-
-	#Comprueba si es una letra mayuscula entre A y H
-	if (c1 > 7 or c1 < 0):
-		print "  Fallo primer caracter: " + movimiento[0] + " El caracter debe estar entre A y H. \n"
-		return False
-
-	#Caracter2
-
-	#Devuelve Falso en caso de que el caracter no sea un entero.
-	try:
-		c2 = int(movimiento[1])-1
-	except ValueError:
-		print "  Fallo segundo caracter: " + movimiento[1] + " El numero debe estar estar entre 1 y 8. \n"
-		return False
-
-	#Comprueba si es un número entre 1 y 8
-	if c2 > 7 or c2 < 0:
-		print "  Fallo segundo caracter: " + movimiento[1] + " El numero debe estar estar entre 1 y 8. \n"
-		return False
-
-	#Caracter3
-
-	#Convierte el caracter a un numero
-	c3 = ord(movimiento[2]) - 65
-
-	#Comprueba si es una letra mayuscula entre A y H
-	if (c3 > 7 or c3 < 0):
-		print "  Fallo tercer caracter: " + movimiento[2] + " El caracter debe estar entre A y H. \n"
-		return False
-
-	#Caracter4
-
-	#Devuelve Falso en caso de que el caracter no sea un entero.
-	try:
-		c4 = int(movimiento[3])-1
-	except ValueError:
-		print "  Fallo cuarto caracter: " + movimiento[3] + " El numero debe estar estar entre 1 y 8. \n"
-		return False
-
-	#Comprueba si es un número entre 1 y 8
-	if c4 > 7 or c4 < 0:
-		print "  Fallo cuarto caracter: " + movimiento[3] + " El numero debe estar estar entre 1 y 8. \n"
-		return False
-
 
 	#Buscamos que el movimiento sea solo en las casillas blancas
 	if (abs(c3) - c4+1) % 2 != 0:
@@ -142,45 +111,41 @@ def entradaPermitida(movimiento):
 		print "  Solo se puede mover en diagonal. \n"
 		return False
 
-	#Try-except que captura el caso de que la casilla no tenga ficha
-	try:
-		#Comprueba que el movimiento de los peones solo es de una unidad
-		if (tablero[c1][c2].tipo == 0) and calcularDistancia(c1, c3) != 1:
+	
+	#Comprueba que el movimiento de los peones solo es de una unidad
+	if (tablero[c1][c2].tipo == 0) and calcularDistancia(c1, c3) != 1:
 
-			print "  Los peones solo se pueden mover con distancia 1. \n"
-			return False
-
-		#Comprueba que no se haya movido la ficha del jugador rival
-		if ((tablero [c1][c2].color == 0) and (turno == "Blancas")) or ((tablero [c1][c2].color == 1) and (turno == "Negras")): 
-
-			print "  No puede mover las fichas del jugador contrario. Tramposo!! \n"
-			return False
-
-		#Comprueba que la ficha que se quiere comer no sea del mismo color que la que come.
-		if (tablero[c3][c4] != 0) and (tablero[c1][c2].color == tablero[c3][c4].color):
-			print "  No se pueden comer fichas propias. \n"
-			return False
-		
-		#Calculamos la distancia y la direccion de las coordenadas (x, y)
-		distancia = calcularDistancia(c1, c3)
-		x,y = direcMovimiento(c1, c2, c3, c4)
-
-		#Comprueba que las reinas no salten ningún peón
-		if (tablero[c1][c2].tipo == 1) and (distancia != 1):
-
-			i = 1
-			while (i != distancia):
-			
-				lado = i * x
-				arriba = i * y			
-				i += 1
-				
-				if tablero[c1 + lado][c2 + arriba] != 0:
-					print "  Las reinas no pueden saltar peones. \n"
-					return False
-	except AttributeError:
-		print "  La casilla esta vacia \n"
+		print "  Los peones solo se pueden mover con distancia 1. \n"
 		return False
+
+	#Comprueba que no se haya movido la ficha del jugador rival
+	if ((tablero [c1][c2].color == 0) and (turno == "Blancas")) or ((tablero [c1][c2].color == 1) and (turno == "Negras")): 
+
+		print "  No puede mover las fichas del jugador contrario. Tramposo!! \n"
+		return False
+
+	#Comprueba que la ficha que se quiere comer no sea del mismo color que la que come.
+	if (tablero[c3][c4].vacia == False) and (tablero[c1][c2].color == tablero[c3][c4].color):
+		print "  No se pueden comer fichas propias. \n"
+		return False
+	
+	#Calculamos la distancia y la direccion de las coordenadas (x, y)
+	distancia = calcularDistancia(c1, c3)
+	x,y = direcMovimiento(c1, c2, c3, c4)
+
+	#Comprueba que las reinas no salten ningún peón
+	if (tablero[c1][c2].tipo == 1) and (distancia != 1):
+
+		i = 1
+		while (i != distancia):
+		
+			lado = i * x
+			arriba = i * y			
+			i += 1
+			
+			if tablero[c1 + lado][c2 + arriba].vacia == False:
+				print "  Las reinas no pueden saltar peones. \n"
+				return False
 
 	#En caso de que no se cumpla ningun caso anterior, quiere decir que la entrada del usuario ha sido correcta, por lo que devuelve verdadero
 	return True
@@ -196,7 +161,7 @@ def puedeMover(c1, c2, c3, c4):
 	global seguir
 	
 	#si la posición a la que se mueve está vacia llama a mover, sino llama a comerficha
-	if tablero[c3][c4] == 0:
+	if tablero[c3][c4].vacia == True:
 		mover(c1, c2, c3, c4)
 
 	else:
@@ -208,7 +173,7 @@ def puedeMover(c1, c2, c3, c4):
 			
 			#llama a comerficha si la posicion siguiente esta vacia si salta un error es porque la ficha se colocaría fuera del tablero, en cuyo caso se captura
 			try:
-				if (c4 != 0) and (tablero[c3 + x][c4 + y] == 0):
+				if (c4 != 0) and (tablero[c3 + x][c4 + y].vacia == True):
 				
 					comerFicha(c1, c2, c3, c4)
 					comerEnCadena(c3 + x,c4 + y)
@@ -233,15 +198,15 @@ def direcMovimiento(c1, c2, c3, c4):
 def mover(c1, c2, c3, c4):
 
 	#Pasamos la antigua ficha a la nueva posicion
-	tablero[c3][c4] = tablero[c1][c2]
-	
-	#Borramos la ficha de la antigua posicion
-	tablero[c1][c2] = 0
+	tablero[c3][c4].color = tablero[c1][c2].color
 
-	#posiNueva es el nombre de la posición en la que se colocará la ficha.
-	posiNueva = str(c3 + 65) + str(c4 + 1)
-	#Damos al atributo posicion de la ficha la nueva posicion
-	tablero[c3][c4].posicion = posiNueva
+	tablero[c3][c4].tipo = tablero[c1][c2].tipo
+	
+	#Borramos la ficha de la antigua posicion y la agregamos en la nueva
+	tablero[c1][c2].vacia = True
+	tablero[c3][c4].vacia = False
+
+	
 
 	promociona(c3, c4)
 
@@ -253,17 +218,19 @@ def comerFicha(c1, c2, c3, c4):
 	
 	x,y = direcMovimiento(c1, c2, c3, c4)
 	
+
 	#Pasamos la antigua ficha a la nueva posicion
-	tablero[c3 + x][c4 + y] = tablero[c1][c2]
+	tablero[c3+x][c4+y].color = tablero[c1][c2].color
 
-	#Borramos la posicion antigua y la de la ficha que se ha comido
-	tablero[c3][c4] = 0
-	tablero[c1][c2] = 0
+	tablero[c3+x][c4+y].tipo = tablero[c1][c2].tipo
 
-	#posiNueva es el nombre de la posición en la que se colocará la ficha.
-	posiNueva = str(c3 + x + 65) + str(c4 + y + 1)
-	#Damos al atributo posicion de la ficha la nueva posicion
-	tablero[c3 + x][c4 + y].posicion = posiNueva
+	#Borramos la posicion antigua y la de la ficha que se ha comido y agregamos la nueva
+	tablero[c1][c2].vacia = True
+	tablero[c3][c4].vacia = True
+	
+
+	tablero[c3+x][c4+y].vacia = False
+
 
 	promociona(c3 + x, c4 + y)
 	
@@ -314,7 +281,6 @@ def promociona(c3, c4):
 	
 		tablero[c3][c4].tipo = 1
 
-
 #Función que devuelve la lista de los posibles movimientos que puede hacer la ficha.
 def calcularPosibles(c3,c4):
 	#Creamos posibles y posibles copia, "posibles" será donde se almacenarán los posibles movimientos, "posiblesCopia" sirve para que si no ha cambiado nada en la siguiente iteración termine de buscar posibilidades, ya que no hay más.
@@ -324,8 +290,21 @@ def calcularPosibles(c3,c4):
 	#Es el primer valor, y desde donde se empezarán a analizar las posibles opciones.
 	original = str(c3) + str(c4)
 	posibles.append([original])
-	tableroPosibles = copy.deepcopy(tablero)
-	tableroPosibles[c3][c4]=0
+	#tableroPosibles = tablero[:]
+	tableroPosibles = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+
+	for y in range(8):
+		for x in range(8):
+				tableroPosibles[y][x] = Casilla(0,0, chr(65+y)+str(x+1),False)
+
+				tableroPosibles[y][x].color = tablero[y][x].color
+
+				tableroPosibles[y][x].tipo = tablero[y][x].tipo
+
+				tableroPosibles[y][x].vacia = tablero[y][x].vacia
+			
+
+	tableroPosibles[c3][c4].vacia = True
 	
 	#Comprueba que "posibles" no sea igual que en la anterior pasaad
 	while (posibles != posiblesCopia):
@@ -356,7 +335,7 @@ def calcularPosibles(c3,c4):
 
 								#Si encuentra una ficha del mismo color que el de la que está comiendo, deja de comprobar en esa direccion.
 								try: 
-									if tableroPosibles[valor1+x+superX][valor2+y+superY] != 0 and tablero[c3][c4].color == tableroPosibles[valor1+x+superX][valor2+y+superY].color:
+									if tableroPosibles[valor1+x+superX][valor2+y+superY].vacia == False and tablero[c3][c4].color == tableroPosibles[valor1+x+superX][valor2+y+superY].color:
 										break
 								except IndexError:
 										break
@@ -373,13 +352,14 @@ def calcularPosibles(c3,c4):
 
 	return posibles
 
+
 def addPosibles(valor1,valor2, x,y, lista,posibles, superX, superY,tableroPosibles):
 	if (valor1 >= 0) and (valor2 >= 0):
 
 		#Captura el caso de comprobar una casilla fuera del rango de la lista
 		try:
 			#En el caso de que cumpla las condicciones para que la posición pueda ser comida también comprueba 
-			if (tableroPosibles[valor1+x+superX][valor2+y+superY] != 0) and (tableroPosibles[valor1+(2*x+superX)][valor2+(2*y+superY)] == 0) and (tableroPosibles[valor1+x+superX][valor2+y+superY].color != turnoColor):
+			if (tableroPosibles[valor1+x+superX][valor2+y+superY].vacia == False) and (tableroPosibles[valor1+(2*x+superX)][valor2+(2*y+superY)].vacia == True) and (tableroPosibles[valor1+x+superX][valor2+y+superY].color != turnoColor):
 				
 				if (valor1+2*x+superX >= 0) and (valor2+2*y+superY >= 0):
 
@@ -454,8 +434,7 @@ jugadas =[]
 #Controla la continuidad de la aplicacion.
 while seguir == True:
 
-	tableroAnterior = copy.deepcopy(tablero)
-	jugadas.append(tableroAnterior)
+	jugadas.append(tablero)
 
 	verTablero()
 	
