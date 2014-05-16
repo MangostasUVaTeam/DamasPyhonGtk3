@@ -1,6 +1,7 @@
 #Ventana{
 	background-color: 		#2A2A2A;	
 	background-repeat:		no-repeat;
+	background-image: 		url('Images/tablero_idea.png')
 }
 #FichaBlanca{
 	background-image:		url('Images/Blanca60.png');

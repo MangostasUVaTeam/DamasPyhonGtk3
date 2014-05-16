@@ -77,16 +77,3 @@ class Casilla(Gtk.Button):
 				ver += ", Negra"
 
 		print ver
-
-	def verFicha(self):
-
-		if self.color == 0:
-			if self.tipo == 0:
-				return "*"
-			else:
-				return "X"
-		else:
-			if self.tipo == 0:
-				return "o"
-			else:
-				return "8"
