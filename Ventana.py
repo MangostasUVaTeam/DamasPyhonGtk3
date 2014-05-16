@@ -2,9 +2,18 @@
 from gi.repository import Gtk, Gdk
 from Ficha import Casilla
 
-mover = ""
+mueveme = ""
+
+#Indica si el juego debe continuar o no
+seguir = True
+
+#Esta variable indica si se mueven las fichas blancas o las negras (Blancas = True , Negras =False) turnoColor hace lo mismo, solo que con 0 y 1 respectivamente
+turno = "Blancas"
+turnoColor = 0
 
 def selecionarMovi(casilla, posicion):
+
+	global mueveme, turno, turnoColor
 
 	if casilla.color == 0 and not casilla.vacia:
 		casilla.set_name("FichaNegraSel")
@@ -13,15 +22,37 @@ def selecionarMovi(casilla, posicion):
 		casilla.set_name("FichaBlancaSel")
 		casilla.seleccionado = True
 
-	global mover
-	mover += posicion
-	if len(mover) == 4:
-		print mover
-		mover = ""
-		for a in range(8):
-			for b in range(8):
-				if tablero[a][b].seleccionado:
-					tablero[a][b].reset()
+	mueveme += posicion
+	if len(mueveme) == 4:
+		print mueveme
+		
+		movimiento = mueveme
+
+		if entradaPermitida(movimiento) == True:
+
+			#Conmuta el turno de cada color, y muestra en pantalla a quien le toca
+			if turno == "Negras":
+				turno = "Blancas"
+				turnoColor = 1 
+			else:
+				turno = "Negras"
+				turnoColor = 0
+			print "  Turno de las " + turno
+
+			#Divide el movimiento en las componentes de las coordenadas origen y destino
+
+			c1 = ord(movimiento[0]) - 65
+			c2 = int(movimiento[1])-1			
+			c3 = ord(movimiento[2]) - 65
+			c4 = int(movimiento[3])-1
+
+
+		mueveme = ""
+
+		for aa in range(8):
+			for bb in range(8):
+				if tablero[aa][bb].seleccionado:
+					tablero[aa][bb].reset()
 
 """
 def hover(casilla, posicion):
@@ -30,38 +61,28 @@ def hover(casilla, posicion):
 
 #Ventana
 win = Gtk.Window()
-ancho = 480
-alto = 480
+ancho = 640
+alto = 640
 win.set_name('Ventana')
 win.set_title('Damas - Python')
 win.set_default_size(640, alto)
 
-tablero = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
-
 #Layout Fixed con distancias en pixeles
 fix = Gtk.Fixed()
+
 
 #Disponer las casillas vacias y con fichas en el tablero
 for a in range(8):
 	for b in range(8):
-			if (a == 0 or a == 1 or a == 2) and ((a-b)%2 == 0):
-				tablero[b][a] = Casilla(1,0, chr(72-a)+str(b+1),False)
-			elif (a == 5 or a == 6 or a == 7) and ((a-b)%2 == 0):
-				tablero[b][a] = Casilla(0,0, chr(72-a)+str(b+1),False)
-			else:
-				tablero[b][a] = Casilla(0,0, chr(72-a)+str(b+1),True)
-			#Dar los eventos a cada casilla
-			tablero[b][a].connect("clicked", selecionarMovi, tablero[b][a].posicion)			
-			#tablero[b][a].connect("enter", hover, tablero[b][a].posicion)
+		#Dar los eventos a cada casilla
+		tablero[a][b].connect("clicked", selecionarMovi, tablero[a][b].posicion)
+		#tablero[a][b].connect("enter", hover, tablero[a][b].posicion)
 
 #Colocar las casillas dentro del Fixed
-for x in range(8):
+for x in range(-7,1):
 	for y in range(8):
-		if x == 0 and y == 0:
-			fix.put(tablero[x][y], 5, 5)
+		fix.put(tablero[abs(x)][abs(y)], (alto/8*abs(y))+5, (ancho/8*(7-abs(x)))+5)
 
-		else:
-			fix.put(tablero[x][y], (ancho/8*x)+5, (alto/8*y)+5)
 
 #Anadir el Fixed a la ventana
 win.add(fix)

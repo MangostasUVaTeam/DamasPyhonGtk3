@@ -1,12 +1,15 @@
 ﻿#Adrian Calvo Rojo y Sergio Garcia Prado
 #!/usr/bin/python
-import gtk
+from gi.repository import Gtk
 
-class Casilla(gtk.Button):
+class Casilla(Gtk.Button):
 	
 	#Inicializar cada objeto
 	def __init__(self, color, tipo, posicion, vacia):
+
 		super(Casilla, self).__init__()
+		super(Casilla, self).set_size_request(60,60)
+		
 		#Las fichas negras = 0 y las blancas = 1
 		self.color = color
 		
@@ -18,8 +21,6 @@ class Casilla(gtk.Button):
 		self.seleccionado = False
 
 		self.vacia = vacia
-
-		super(Casilla, self).set_size_request(60,60)
 
 		if vacia:
 			super(Casilla, self).set_name('Vacia')
@@ -35,6 +36,21 @@ class Casilla(gtk.Button):
 				else:
 					super(Casilla, self).set_name('FichaBlancaDama')
 
+	def setVacia(self):
+		self.set_name('Vacia')
+		self.vacia = True
+
+	def mov(self, Casilla):
+
+		Casilla.color = self.color
+		Casilla.tipo = self.tipo
+		Casilla.set_name(self.get_name())
+		self.setVacia()
+		Casilla.vacia = False
+		Casilla.posicion = self.posicion
+		Casilla.reset()
+
+
 	def reset(self):
 		self.seleccionado = False
 		if not self.vacia:
@@ -48,3 +64,29 @@ class Casilla(gtk.Button):
 					self.set_name('FichaBlanca')
 				else:
 					self.set_name('FichaBlancaDama')
+
+	def ver(self):
+
+		if self.vacia:
+			ver = "Vacia"
+		else:
+			ver = self.posicion
+			if self.color == 1:
+				ver += ", Blanca"
+			else:
+				ver += ", Negra"
+
+		print ver
+
+	def verFicha(self):
+
+		if self.color == 0:
+			if self.tipo == 0:
+				return "*"
+			else:
+				return "X"
+		else:
+			if self.tipo == 0:
+				return "o"
+			else:
+				return "8"
