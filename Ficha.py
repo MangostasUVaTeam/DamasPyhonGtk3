@@ -8,7 +8,7 @@ class Casilla(Gtk.Button):
 	def __init__(self, color, tipo, posicion, vacia):
 
 		super(Casilla, self).__init__()
-		super(Casilla, self).set_size_request(60,60)
+		super(Casilla, self).set_size_request(75,75)
 		
 		#Las fichas negras = 0 y las blancas = 1
 		self.color = color
@@ -77,16 +77,3 @@ class Casilla(Gtk.Button):
 				ver += ", Negra"
 
 		print ver
-
-	def verFicha(self):
-
-		if self.color == 0:
-			if self.tipo == 0:
-				return "*"
-			else:
-				return "X"
-		else:
-			if self.tipo == 0:
-				return "o"
-			else:
-				return "8"

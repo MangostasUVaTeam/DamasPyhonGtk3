@@ -1,6 +1,7 @@
 #Ventana{
 	background-color: 		#2A2A2A;	
 	background-repeat:		no-repeat;
+	background-image: 		url('Images/tablero_idea.png')
 }
 #FichaBlanca{
 	background-image:		url('Images/Blanca60.png');
@@ -14,7 +15,6 @@
 	background-repeat:		no-repeat;
 	background-position:   	center;
 	border:					2px double yellow;
-	border-radius: 			30px;
 	background-color:       rgba(0,0,0,0);
 }
 #FichaNegra{
