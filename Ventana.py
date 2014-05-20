@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from gi.repository import Gtk, Gdk
 from Ficha import Casilla
+import copy
 
 mueveme = ""
 
@@ -16,11 +17,20 @@ def selecionarMovi(casilla, posicion):
 	global mueveme, turno, turnoColor
 
 	if casilla.color == 0 and not casilla.vacia:
-		casilla.set_name("FichaNegraSel")
-		casilla.seleccionado = True
+		if casilla.tipo == 0:
+			casilla.set_name("FichaNegraSel")
+			casilla.seleccionado = True
+		else:
+			casilla.set_name("FichaNegraDamaSel")
+			casilla.seleccionado = True
+
 	if casilla.color == 1 and not casilla.vacia:
-		casilla.set_name("FichaBlancaSel")
-		casilla.seleccionado = True
+		if casilla.tipo == 0:
+			casilla.set_name("FichaBlancaSel")
+			casilla.seleccionado = True
+		else:
+			casilla.set_name("FichaBlancaDamaSel")
+			casilla.seleccionado = True
 
 	mueveme += posicion
 	if len(mueveme) == 4:
@@ -56,58 +66,6 @@ def selecionarMovi(casilla, posicion):
 				if tablero[aa][bb].seleccionado:
 					tablero[aa][bb].reset()
 
-"""
-def hover(casilla, posicion):
-	print posicion
-"""
-
-#Ventana
-win = Gtk.Window()
-ancho = 640
-alto = 640
-win.set_name('Ventana')
-win.set_title('Damas - Python')
-win.set_default_size(640, alto)
-
-tablero = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
-
-#Layout Fixed con distancias en pixeles
-fix = Gtk.Fixed()
-
-#Disponer las casillas vacias y con fichas en el tablero
-for a in range(8):
-	for b in range(8):
-		if (a == 0 or a == 1 or a == 2) and ((a-b)%2 != 0):
-			tablero[a][b] = Casilla(0,0, chr(65+a)+str(b+1),False)
-		elif (a == 5 or a == 6 or a == 7) and ((a-b)%2 != 0):				
-			tablero[a][b] = Casilla(1,0, chr(65+a)+str(b+1),False)
-		else:
-			tablero[a][b] = Casilla(0,0, chr(65+a)+str(b+1),True)
-		#Dar los eventos a cada casilla
-		tablero[a][b].connect("clicked", selecionarMovi, tablero[a][b].posicion)
-		#tablero[a][b].connect("enter", hover, tablero[a][b].posicion)
-
-#Colocar las casillas dentro del Fixed
-for x in range(-7,1):
-	for y in range(8):
-		fix.put(tablero[abs(x)][abs(y)], (alto/8*abs(y))+5, (ancho/8*(7-abs(x)))+5)
-
-
-#Anadir el Fixed a la ventana
-win.add(fix)
-
-#Evento de cerrar al cerrar la ventana
-win.connect("delete-event", Gtk.main_quit)
-
-#Cargar estilos de un fichero
-style_provider = Gtk.CssProvider()
-
-css = open('css/estilo.css', 'rb')
-css_data = css.read()
-css.close()
-
-style_provider.load_from_data(css_data)
-Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 #Funciones
 
@@ -240,6 +198,8 @@ def comerFicha(c1, c2, c3, c4):
 
 	#Borramos la posicion antigua y la de la ficha que se ha comido
 	tablero[c3][c4].setVacia()
+	tablero[c3][c4].color = None
+	tablero[c3][c4].tipo = None 
 
 	promociona(c3 + x, c4 + y)
 	
@@ -287,6 +247,10 @@ def promociona(c3, c4):
 	if ((tablero[c3][c4].color == 0) and c3 == 7) or ((tablero[c3][c4].color == 1) and c3 == 0):
 	
 		tablero[c3][c4].tipo = 1
+		if tablero[c3][c4].color == 0:
+			tablero[c3][c4].set_name('FichaBlancaDama')
+		else:
+			tablero[c3][c4].set_name('FichaNegraDama')
 
 #Funcion que devuelve la lista de los posibles movimientos que puede hacer la ficha.
 def calcularPosibles(c3,c4):
@@ -308,8 +272,7 @@ def calcularPosibles(c3,c4):
 
 				tableroPosibles[y][x].tipo = tablero[y][x].tipo
 
-				tableroPosibles[y][x].vacia = tablero[y][x].vacia
-			
+				tableroPosibles[y][x].vacia = tablero[y][x].vacia		
 
 	tableroPosibles[c3][c4].vacia = True
 	
@@ -412,6 +375,56 @@ def numFichas(turnoColor):
 					fichas = fichas + 1
 
 	return fichas
+
+
+#Ventana
+win = Gtk.Window()
+ancho = 640
+alto = 640
+win.set_name('Ventana')
+win.set_title('Damas - Python')
+win.set_default_size(1024, alto)
+
+tablero = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+
+#Layout Fixed con distancias en pixeles
+fix = Gtk.Fixed()
+
+#Disponer las casillas vacias y con fichas en el tablero
+for a in range(8):
+	for b in range(8):
+		if (a == 0 or a == 1 or a == 2) and ((a-b)%2 != 0):
+			tablero[a][b] = Casilla(0,0, chr(65+a)+str(b+1),False)
+		elif (a == 5 or a == 6 or a == 7) and ((a-b)%2 != 0):				
+			tablero[a][b] = Casilla(1,0, chr(65+a)+str(b+1),False)
+		else:
+			tablero[a][b] = Casilla(0,0, chr(65+a)+str(b+1),True)
+		#Dar los eventos a cada casilla
+		tablero[a][b].connect("clicked", selecionarMovi, tablero[a][b].posicion)
+		#tablero[a][b].connect("enter", hover, tablero[a][b].posicion)
+
+#Colocar las casillas dentro del Fixed
+for x in range(-7,1):
+	for y in range(8):
+		fix.put(tablero[abs(x)][abs(y)], (alto/8*abs(y))+5, (ancho/8*(7-abs(x)))+5)
+
+
+#Anadir el Fixed a la ventana
+win.add(fix)
+
+#Evento de cerrar al cerrar la ventana
+win.connect("delete-event", Gtk.main_quit)
+
+#Cargar estilos de un fichero
+style_provider = Gtk.CssProvider()
+
+css = open('css/estilo.css', 'rb')
+css_data = css.read()
+css.close()
+
+style_provider.load_from_data(css_data)
+Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
 
 win.show_all()
 Gtk.main()

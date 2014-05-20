@@ -1,4 +1,5 @@
-﻿#Adrian Calvo Rojo y Sergio Garcia Prado
+﻿
+#Adrian Calvo Rojo y Sergio Garcia Prado
 #!/usr/bin/python
 from gi.repository import Gtk
 
@@ -8,7 +9,7 @@ class Casilla(Gtk.Button):
 	def __init__(self, color, tipo, posicion, vacia):
 
 		super(Casilla, self).__init__()
-		super(Casilla, self).set_size_request(60,60)
+		super(Casilla, self).set_size_request(75,75)
 		
 		#Las fichas negras = 0 y las blancas = 1
 		self.color = color
