@@ -59,12 +59,18 @@ def selecionarMovi(casilla, posicion):
 			#es quien elige el tipo de movimiento(mover o comer)
 			puedeMover(c1, c2, c3, c4)
 
+			tableroAnterior = copiarTablero(tablero)
+			
+			jugadas.append(tableroAnterior)
+
 		mueveme = ""
 
 		for aa in range(8):
 			for bb in range(8):
 				if tablero[aa][bb].seleccionado:
 					tablero[aa][bb].reset()
+
+
 
 
 #Funciones
@@ -262,17 +268,8 @@ def calcularPosibles(c3,c4):
 	original = str(c3) + str(c4)
 	posibles.append([original])
 	#tableroPosibles = tablero[:]
-	tableroPosibles = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
 
-	for y in range(8):
-		for x in range(8):
-				tableroPosibles[y][x] = Casilla(0,0, chr(65+y)+str(x+1),False)
-
-				tableroPosibles[y][x].color = tablero[y][x].color
-
-				tableroPosibles[y][x].tipo = tablero[y][x].tipo
-
-				tableroPosibles[y][x].vacia = tablero[y][x].vacia		
+	tableroPosibles = copiarTablero(tablero)		
 
 	tableroPosibles[c3][c4].vacia = True
 	
@@ -376,6 +373,27 @@ def numFichas(turnoColor):
 
 	return fichas
 
+def deshacerJugada(self):
+	if jugadas != []:
+
+		tablerodeshacer = jugadas.pop()
+		
+		tablero = copiarTablero(tablerodeshacer)	
+		
+
+def copiarTablero(tableroOriginal):
+	tableroNuevo = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+	for y in range(8):
+		for x in range(8):
+			tableroNuevo[y][x] = Casilla(0,0, chr(65+y)+str(x+1),False)
+
+			tableroNuevo[y][x].color = tableroOriginal[y][x].color
+
+			tableroNuevo[y][x].tipo = tableroOriginal[y][x].tipo
+
+			tableroNuevo[y][x].vacia = tableroOriginal[y][x].vacia
+	return tableroNuevo
+
 
 #Ventana
 win = Gtk.Window()
@@ -386,6 +404,8 @@ win.set_title('Damas - Python')
 win.set_default_size(1024, alto)
 
 tablero = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+
+jugadas = []
 
 #Layout Fixed con distancias en pixeles
 fix = Gtk.Fixed()
@@ -408,6 +428,13 @@ for x in range(-7,1):
 	for y in range(8):
 		fix.put(tablero[abs(x)][abs(y)], (alto/8*abs(y))+5, (ancho/8*(7-abs(x)))+5)
 
+botonDeshacer = Gtk.Button("Deshacer")
+botonDeshacer.set_name("BotonDeshacer")
+botonDeshacer.set_size_request(200, 20)
+botonDeshacer.connect("clicked", deshacerJugada)
+
+        
+fix.put(botonDeshacer, 750,500)
 
 #Anadir el Fixed a la ventana
 win.add(fix)

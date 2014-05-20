@@ -65,6 +65,8 @@ class Casilla(Gtk.Button):
 					self.set_name('FichaBlanca')
 				else:
 					self.set_name('FichaBlancaDama')
+		else:
+			self.set_name('Vacia')
 
 	def ver(self):
 
