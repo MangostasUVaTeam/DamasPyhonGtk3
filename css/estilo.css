@@ -1,11 +1,21 @@
+/*Adrian Calvo Rojo y Sergio Garcia Prado*/
 #Ventana{
 	background-color: 		#2A2A2A;	
 	background-repeat:		no-repeat;
-	background-image: 		url('Images/tablero_idea.png')
+	background-image: 		url('Images/fondo.png')
 }
 
+#FinalNegras{
+	background-image:		url('Images/FinalNegras.png');
+}
+
+#FinalBlancas{
+	background-image:		url('Images/FinalBlancas.png');
+}
+
+
 #FichaBlanca{
-	background-image:		url('Images/Blanca60.png');
+	background-image:		url('Images/Blanca75.png');
 	background-repeat:		no-repeat;
 	background-position:   	center;
 	border:					none;
@@ -13,7 +23,7 @@
 }
 
 #FichaBlancaSel{
-	background-image:		url('Images/Blanca60.png');
+	background-image:		url('Images/Blanca75.png');
 	background-repeat:		no-repeat;
 	background-position:   	center;
 	border:					2px double yellow;
@@ -21,7 +31,7 @@
 	background-color:       rgba(0,0,0,0);
 }
 #FichaBlancaDama{
-	background-image:		url('Images/BlancaDama60.png');
+	background-image:		url('Images/BlancaDama75.png');
 	background-repeat:		no-repeat;
 	background-position:   	center;
 	border:					none;
@@ -29,7 +39,7 @@
 }
 
 #FichaBlancaDamaSel{
-	background-image:		url('Images/BlancaDama60.png');
+	background-image:		url('Images/BlancaDama75.png');
 	background-repeat:		no-repeat;
 	background-position:   	center;
 	border:					2px double yellow;
@@ -38,7 +48,7 @@
 }
 
 #FichaNegra{
-	background-image:		url('Images/Negra60.png');
+	background-image:		url('Images/Negra75.png');
 	background-repeat:		no-repeat;
 	background-position:   	center;
 	border:					none;
@@ -46,7 +56,7 @@
 }
 
 #FichaNegraSel{
-	background-image:		url('Images/Negra60.png');
+	background-image:		url('Images/Negra75.png');
 	background-repeat:		no-repeat;
 	background-position:   	center;
 	border:					2px double yellow;
@@ -55,7 +65,7 @@
 }
 
 #FichaNegraDama{
-	background-image:		url('Images/Negra60.png');
+	background-image:		url('Images/NegraDama75.png');
 	background-repeat:		no-repeat;
 	background-position:   	center;
 	border:					none;
@@ -63,7 +73,7 @@
 }
 
 #FichaNegraDamaSel{
-	background-image:		url('Images/Negra60.png');
+	background-image:		url('Images/NegraDama75.png');
 	background-repeat:		no-repeat;
 	background-position:   	center;
 	border:					2px double yellow;
@@ -79,6 +89,37 @@
 	background-color:       rgba(0,0,0,0);
 }
 
-#BotonDeshacer{
-	
+#lbl{
+	background-color:  		white;
+	color:					black;
+	padding-left:			5px;
+	padding-bottom: 		5px;
+	padding-top:	 		5px;	
+	border:					1px solid black;
+	border-radius:			7px;
+	}
+
+#CargaTablero{
+	background-color:  		white;
+	color:					black;
+	padding-right:			190px;
+	padding-left:			5px;
+	padding-bottom: 		70px;
+	border:					1px solid black;
+	border-radius:			7px;
+}
+#GuardarTablero{
+	background-color:  		white;
+	color:					black;
+	padding-right:			210px;
+	padding-left:			5px;
+	padding-bottom: 		70px;
+	border:					1px solid black;
+	border-radius:			7px;
+}
+#Barra{
+	background-color:  		#A0522D;
+	color:					black;
+	border:					4px solid black;
+	border-radius:			7px;
 }

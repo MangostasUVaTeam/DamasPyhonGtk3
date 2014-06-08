@@ -1,6 +1,4 @@
-﻿
-#Adrian Calvo Rojo y Sergio Garcia Prado
-#!/usr/bin/python
+﻿#Adrian Calvo Rojo y Sergio Garcia Prado
 from gi.repository import Gtk
 
 class Casilla(Gtk.Button):
@@ -40,17 +38,25 @@ class Casilla(Gtk.Button):
 	def setVacia(self):
 		self.set_name('Vacia')
 		self.vacia = True
+		self.color = None
+		self.tipo = None 
 
 	def mov(self, Casilla):
 
 		Casilla.color = self.color
-		Casilla.tipo = self.tipo
+		Casilla.tipo = self.tipo		
 		Casilla.set_name(self.get_name())
 		self.setVacia()
 		Casilla.vacia = False
-		Casilla.posicion = self.posicion
 		Casilla.reset()
 
+	def promociona(self):
+		if self.color == 0:
+			self.set_name('FichaNegraDama')
+		else:
+			self.set_name('FichaBlancaDama')
+			
+		self.tipo = 1
 
 	def reset(self):
 		self.seleccionado = False
@@ -65,18 +71,9 @@ class Casilla(Gtk.Button):
 					self.set_name('FichaBlanca')
 				else:
 					self.set_name('FichaBlancaDama')
+
 		else:
 			self.set_name('Vacia')
 
 	def ver(self):
-
-		if self.vacia:
-			ver = "Vacia"
-		else:
-			ver = self.posicion
-			if self.color == 1:
-				ver += ", Blanca"
-			else:
-				ver += ", Negra"
-
-		print ver
+			return "Color: " + str(self.color), "Tipo: " + str(self.tipo), "Posicion: " + self.posicion
