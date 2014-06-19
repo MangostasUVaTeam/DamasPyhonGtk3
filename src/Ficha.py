@@ -1,17 +1,4 @@
-<<<<<<< HEAD
-﻿class Ficha:
-	""" Clase Ficha de la que se van a crear objetos """
-	""" Cada objeto Ficha representa un peon o dama del tablero colocados en una posicion del mismo."""
-	
-	#Inicializar cada objeto
-	def __init__(self, color, posicion, tipo):
 
-		#Las fichas negras = 0 y las blancas = 1
-		self.color = color
-
-		self.posicion = posicion
-=======
-﻿#Adrian Calvo Rojo y Sergio Garcia Prado
 from gi.repository import Gtk
 
 class Casilla(Gtk.Button):
@@ -24,27 +11,11 @@ class Casilla(Gtk.Button):
 		
 		#Las fichas negras = 0 y las blancas = 1
 		self.color = color
->>>>>>> GUI-CSS-UnArchivo
+
 		
 		#Las fichas = 0 y las damas = 1
 		self.tipo = tipo
 
-<<<<<<< HEAD
-
-	#Funcion que devuelve las fichas para ser impresas
-	def verFicha(self):
-
-		if self.color == 0:
-			if self.tipo == 0:
-				return "*"
-			else:
-				return "X"
-		else:
-			if self.tipo == 0:
-				return "o"
-			else:
-				return "8"
-=======
 		self.posicion = posicion
 
 		self.seleccionado = False
@@ -107,4 +78,17 @@ class Casilla(Gtk.Button):
 
 	def ver(self):
 			return "Color: " + str(self.color), "Tipo: " + str(self.tipo), "Posicion: " + self.posicion
->>>>>>> GUI-CSS-UnArchivo
+
+	#Funcion que devuelve las fichas para ser impresas
+	def verFicha(self):
+
+		if self.color == 0:
+			if self.tipo == 0:
+				return "*"
+			else:
+				return "X"
+		else:
+			if self.tipo == 0:
+				return "o"
+			else:
+				return "8"
