@@ -517,6 +517,7 @@ def deshacerJugada(self):
 	if jugadas != []:
 
 		tablerodeshacer = jugadas.pop()	
+		jugadasSecuencia.pop()
 
 		for y in range(8):
 			for x in range(8):
@@ -541,13 +542,17 @@ def copiarTablero(tableroOriginal):
 	return tableroNuevo
 
 def partidaNueva(self):
+	global jugadas
+
 	dialog = NewGameVerification(win)
         response = dialog.run()
 
         if response == Gtk.ResponseType.OK:
             reinicializarTablero(self)
+            jugadas = []
             botonNewGame.set_sensitive(False)
             botonDeshacer.set_sensitive(False)
+
 
         dialog.destroy()
 
