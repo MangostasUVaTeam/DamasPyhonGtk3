@@ -5,9 +5,16 @@ DamasPyhonGtk3
 
 Game made in Python + GTk3. 
 
+How to play
 ==============
-To execute it download all files and go to src folder `cd src`, then run tiping `python Ventana.py`
+You must install Python 2 or higher and PyGtk3 on your computer.
 
+To execute it download all files and go to src folder `cd src`, then run typing `python Ventana.py`
+
+Contributions
+==============
+ - [Adrian Calvo](https://github.com/adrianetete) 
+ - [Sergio García](https://github.com/garciparedes) 
 
 
 
