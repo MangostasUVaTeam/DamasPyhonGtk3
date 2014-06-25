@@ -1,7 +1,7 @@
 DamasPyhonGtk3
 ==============
 
-<a href="http://es.tinypic.com?ref=2u7my6r" target="_blank"><img src="http://i59.tinypic.com/2u7my6r.png" border="0" alt="Image and video hosting by TinyPic"></a>
+<img src="http://i59.tinypic.com/2u7my6r.png" border="0" alt="DamasPythonGtk3"></a>
 
 Game made in Python + GTk3. 
 
