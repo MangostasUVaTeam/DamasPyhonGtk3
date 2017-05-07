@@ -1,18 +1,18 @@
-#Adrian Calvo Rojo y Sergio Garcia Prado
+# Adrian Calvo Rojo y Sergio Garcia Prado
 from gi.repository import Gtk
 
-class CargaTablero(Gtk.Fixed):
 
+class CargaTablero(Gtk.Fixed):
     texto = Gtk.Entry()
     button2 = Gtk.Button("Cargar")
 
     def __init__(self, ventana):
-        #Gtk.Window.__init__(self, title="Cargar un tablero")
+        # Gtk.Window.__init__(self, title="Cargar un tablero")
         super(Gtk.Fixed, self).__init__()
-        #super(CargaTablero, self).set_size_request(75,75)
+        # super(CargaTablero, self).set_size_request(75,75)
 
         fixed = Gtk.Fixed()
-        self.put(fixed,1,1)
+        self.put(fixed, 1, 1)
 
         self.ventana = ventana
 
@@ -29,12 +29,11 @@ class CargaTablero(Gtk.Fixed):
 
         fixed.put(self.button2, 255, 65)
 
-
     def on_clicked(self, widget):
         dialog = Gtk.FileChooserDialog("Por favor, selecciona un fichero con movimientos", self.ventana,
-            Gtk.FileChooserAction.OPEN,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+                                       Gtk.FileChooserAction.OPEN,
+                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                        Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
 
         self.add_filters(dialog)
 
@@ -61,18 +60,17 @@ class CargaTablero(Gtk.Fixed):
 
 
 class GuardaTablero(Gtk.Fixed):
-
     carpeta = "partidas"
     nombre = Gtk.Entry()
     button2 = Gtk.Button("Guardar")
 
     def __init__(self, ventana):
-        #Gtk.Window.__init__(self, title="Cargar un tablero")
+        # Gtk.Window.__init__(self, title="Cargar un tablero")
         super(Gtk.Fixed, self).__init__()
-        #super(CargaTablero, self).set_size_request(75,75)
+        # super(CargaTablero, self).set_size_request(75,75)
 
         fixed = Gtk.Fixed()
-        self.put(fixed,1,1)
+        self.put(fixed, 1, 1)
 
         self.ventana = ventana
 
@@ -89,13 +87,12 @@ class GuardaTablero(Gtk.Fixed):
 
         fixed.put(self.button2, 245, 65)
 
-
     def on_clicked(self, widget):
 
         dialog = Gtk.FileChooserDialog("Por favor, selecciona una carpeta", self.ventana,
-            Gtk.FileChooserAction.SELECT_FOLDER,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             "Seleccionar", Gtk.ResponseType.OK))
+                                       Gtk.FileChooserAction.SELECT_FOLDER,
+                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                        "Seleccionar", Gtk.ResponseType.OK))
 
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
